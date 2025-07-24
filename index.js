@@ -1,5 +1,5 @@
 import express from 'express'
-
+import datingRouter from './Routes/auth.routes.js';
 
 const app = express()
 
@@ -7,8 +7,9 @@ const PORT = process.env.PORT || 3000
 
 app.use(express.json())
 
-//Rutas
 
+//Rutas
+app.use('/api/auth',datingRouter)
 //Auth
 
 //Ruta por defecto

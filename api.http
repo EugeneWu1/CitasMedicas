@@ -1,0 +1,24 @@
+###Autenticacion 
+
+###Registro de Usuario
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  //"username": "newuser",
+  //"password": "securepassword"
+}
+
+###Inicio de Sesión
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  //"username": "existinguser",
+  //"password": "securepassword"
+}
+
+###Servicios 
+
+
+###Citas
