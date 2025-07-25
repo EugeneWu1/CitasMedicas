@@ -20,5 +20,20 @@ Content-Type: application/json
 
 ###Servicios 
 
+### Consulta de todos los servicios
+GET http://localhost:3000/servicios
+
+### Crear un servicio
+POST http://localhost:3000
+Content-Type: application/json
+
+
+### Actualizar un servicio
+PUT http://localhost:3000/servicios/:id
+Content-Type: application/json
+
+
+### Eliminar un servicio
+DELETE http://localhost:3000/servicios/:id
 
 ###Citas
