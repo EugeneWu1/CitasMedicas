@@ -135,12 +135,6 @@ export const changeAvailability = async (req,res) => {
 export const deleteService = async (req,res) => {
     const {id} = req.params
 
-    res.json({
-      success: true,
-      message: 'Servicio eliminado correctamente',
-      data: result
-    });
-
     try {
         const result = await deleteServicio(id)
 

@@ -19,10 +19,10 @@ serviceRouter.get('/disponibilidad',availableService)
 serviceRouter.post('/',createService)
 
 //Actualizar servicio
-serviceRouter.patch('/:id',updateService)
+serviceRouter.put('/:id',updateService)
 
 //Actualizar disponibilidad
-serviceRouter.patch('/:id/disponibilidad', changeAvailability)
+serviceRouter.put('/:id/disponibilidad', changeAvailability)
 
 //Borrar un servicio
 serviceRouter.delete('/:id',deleteService)
