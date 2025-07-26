@@ -13,7 +13,7 @@ serviceRouter.get('/',(req,res) => {
 })
 
 //Consultar por disponibilidad
-serviceRouter.get('/available',availableService)
+serviceRouter.get('/disponibilidad',availableService)
 
 //Crear un servicio
 serviceRouter.post('/',createService)
@@ -22,7 +22,7 @@ serviceRouter.post('/',createService)
 serviceRouter.patch('/:id',updateService)
 
 //Actualizar disponibilidad
-serviceRouter.patch('/:id/available', changeAvailability)
+serviceRouter.patch('/:id/disponibilidad', changeAvailability)
 
 //Borrar un servicio
 serviceRouter.delete('/:id',deleteService)
