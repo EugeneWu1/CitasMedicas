@@ -1,5 +1,6 @@
 import express from 'express'
 import userRouter from './Routes/auth.routes.js';
+import serviceRouter from './Routes/servicios.routes.js'
 
 const app = express()
 
@@ -10,6 +11,8 @@ app.use(express.json())
 
 //Rutas
 app.use('/api/auth',userRouter)
+
+app.use('/servicios',serviceRouter)
 //Auth
 
 //Ruta por defecto

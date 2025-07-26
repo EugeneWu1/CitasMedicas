@@ -27,4 +27,5 @@ serviceRouter.patch('/:id/disponibilidad', changeAvailability)
 //Borrar un servicio
 serviceRouter.delete('/:id',deleteService)
 
+export default serviceRouter
 //TODO: Agregar isAuth update y delete

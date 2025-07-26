@@ -41,24 +41,24 @@ Content-Type: application/json
 }
 
 ### Actualizar un servicio
-PUT http://localhost:3000/servicios/1
+PUT http://localhost:3000/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0
 Content-Type: application/json
 
 {
   "nombre": "Consulta General Actualizada",
   "descripcion": "Servicio actualizado",
-  "duracion": 45,
-  "precio": 60.00,
+  "duracion": 30,
+  "precio": 400.00,
   "disponible": true
 }
 
 ### Actualizar disponibilidad
 
-PUT http://localhost:3000/servicios/1/disponibilidad
+PUT http://localhost:3000/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0/disponibilidad
 Content-Type: application/json
 
 {
-  "disponible": true
+  "disponible": false
 }
 
 ### Eliminar un servicio

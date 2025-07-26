@@ -1,6 +1,6 @@
-import {validateServices, validateServicesUpdate, validateAvailability} from '../Schemas/servicios.schema.js'
+import {validateServices, validateServiceUpdate, validateAvailability} from '../Schemas/servicios.schema.js'
 import {getAllServicios,getServiciosPorDisponibilidad,cambiarDisponibilidad,insertServicio,updateServicio,deleteServicio} from '../Models/servicios.models.js'
-import {v4 as uuidv4} from uuid
+import {v4 as uuidv4} from 'uuid'
 
 export const getAll = async (req,res) => {
     try {
@@ -76,7 +76,7 @@ export const createService = async(req,res) => {
 export const updateService = async (req,res) => {
     const {id} = req.params
 
-    const dataValidada = validateServicesUpdate(req.body)
+    const dataValidada = validateServiceUpdate(req.body)
 
     if(!dataValidada.success){
         return res.status(400).json({

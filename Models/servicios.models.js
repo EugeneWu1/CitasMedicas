@@ -1,5 +1,4 @@
-import { message } from 'telegram/client';
-import pool from '../database/db.js';
+import pool from '../Config/db.js';
 
 //getAllServicios,insertServicio,updateServicio,deleteServicio
 

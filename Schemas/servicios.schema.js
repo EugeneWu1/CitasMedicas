@@ -1,25 +1,24 @@
-import zod from 'zod'
+import { z } from 'zod'
 
-//Schema general
-const serviceSchema = zod.Object({
-  "nombre": zod.string().min(5).max(50),
-  "descripcion": zod.string().min(10).max(200),
-  "duracion": zod.number(),
-  "precio": zod.number(),
-  "disponible": zod.boolean()
+// Schema general
+const serviceSchema = z.object({
+  nombre: z.string().min(5).max(50),
+  descripcion: z.string().min(10).max(200),
+  duracion: z.number(),
+  precio: z.number(),
+  disponible: z.boolean()
 }).strict()
 
-//Schema para validar cambios de estado
-const availabilitySchema = zod.Object({
-  "disponible":zod.boolean()
+// Schema para validar cambios de estado
+const availabilitySchema = z.object({
+  disponible: z.boolean()
 }).strict()
 
-
-//Para el update hay que habilitar campos a opcionales
+// Para el update hay que habilitar campos opcionales
 const serviceUpdateSchema = serviceSchema.partial().strict()
 
 export const validateServices = (services) => {
-    return serviceSchema.safeParse(services)
+  return serviceSchema.safeParse(services)
 }
 
 export const validateServiceUpdate = (data) => {
