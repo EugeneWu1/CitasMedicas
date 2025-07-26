@@ -1,16 +1,19 @@
 import {Router} from 'express';
 import {
 
-    RegisterUser,
-    LoginUser
+    createClient,
+    login,
+    
 }from '../Controllers/auth.controller.js'
 
-const datingRouter = Router();
+const userRouter = Router();
 
 //Rutas de Autenticacion
-datingRouter.post('/register',RegisterUser)
-datingRouter.post('/login' ,LoginUser )
+userRouter.post('/register',createClient)
+userRouter.post('/login' ,login )
+
+//datingRouter.patch('/set-password',setPassword)
 
 
 
-export default datingRouter;
+export default userRouter;

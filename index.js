@@ -1,5 +1,5 @@
 import express from 'express'
-import datingRouter from './Routes/auth.routes.js';
+import userRouter from './Routes/auth.routes.js';
 
 const app = express()
 
@@ -9,7 +9,7 @@ app.use(express.json())
 
 
 //Rutas
-app.use('/api/auth',datingRouter)
+app.use('/api/auth',userRouter)
 //Auth
 
 //Ruta por defecto
