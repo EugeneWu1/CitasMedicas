@@ -5,8 +5,10 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  //"username": "newuser",
-  //"password": "securepassword"
+  "name": "Erick Ronaldo",
+  "email": "emendez@unah.hn",
+  "phone": "33333333",
+  "role": "admin"
 }
 
 ###Inicio de Sesión
