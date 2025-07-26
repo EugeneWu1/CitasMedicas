@@ -25,17 +25,43 @@ Content-Type: application/json
 ### Consulta de todos los servicios
 GET http://localhost:3000/servicios
 
+### Consulta de servicios disponibles
+GET http://localhost:3000/servicios/disponibilidad?available=true
+
 ### Crear un servicio
-POST http://localhost:3000
+POST http://localhost:3000/servicios
 Content-Type: application/json
 
+{
+  "nombre": "Consulta General",
+  "descripcion": "Servicio de consulta medica general",
+  "duracion": 30,
+  "precio": 500.00,
+  "disponible": true
+}
 
 ### Actualizar un servicio
-PUT http://localhost:3000/servicios/:id
+PUT http://localhost:3000/servicios/1
 Content-Type: application/json
 
+{
+  "nombre": "Consulta General Actualizada",
+  "descripcion": "Servicio actualizado",
+  "duracion": 45,
+  "precio": 60.00,
+  "disponible": true
+}
+
+### Actualizar disponibilidad
+
+PUT http://localhost:3000/servicios/1/disponibilidad
+Content-Type: application/json
+
+{
+  "disponible": true
+}
 
 ### Eliminar un servicio
-DELETE http://localhost:3000/servicios/:id
+DELETE http://localhost:3000/servicios/1
 
 ###Citas
