@@ -4,7 +4,7 @@ import serviceRouter from './Routes/servicios.routes.js'
 import dotenv from 'dotenv'
 import helmet from "helmet";
 import { rateLimit } from 'express-rate-limit'
-
+import cors from 'cors'
 
 const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
@@ -26,6 +26,20 @@ app.use(express.json())
 dotenv.config()
 app.use(helmet());
 app.use(limiter)
+
+app.use(cors({
+    // configuración de los origenes permitidos
+    origin: [
+        'http://localhost:3000',
+        'http://127.0.0.1:5500',
+        'https://prod.server.com',
+        'https://test.server.com'
+    ],
+    // metodos permitidos
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    // encabezados permitidos
+    allowedHeaders: ['Content-Type', 'Authorization', 'Bearer', 'api-key']
+}))
 
 //Rutas
 app.use('/api/auth',userRouter)
