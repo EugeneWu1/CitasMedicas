@@ -4,6 +4,8 @@ import {v4 as uuidv4} from 'uuid';
 import {register, loginUser, updatePasswordUser}from '../Models/auth.models.js';
 import {Resend} from 'resend';
 import { createAccountEmailHTML } from '../emailTemplate.js';
+import {authSchemaData} from '../Schemas/auth.schema.js';
+import generatePassword from 'generate-password';
 
 export const login = async(req, res) => {
     try {
@@ -75,12 +77,32 @@ export const login = async(req, res) => {
 
 export const createClient = async (req, res) => {
     try {
-        const { name, email, phone, role } = req.body
+        //const { name: nameReq, email: emailReq, phone: phoneReq, role: roleReq } = req.body
+
+        const createSafe = authSchemaData(req.body)
+
+        if(createSafe.success ===false){
+            return res.status(400).json({
+                success: false,
+                message: 'Error en los datos de entrada',
+                errors: createSafe.error.issues
+            })
+        }
+
+        const { name, email, phone, role } = createSafe.data
 
         const id = uuidv4()
 
-        //generar un hash de contraseña temporal
-        const tempPassword = '1234@newClient'; 
+        //generar una contraseña temporal
+        const tempPassword = generatePassword.generate({
+                length: 12,
+                numbers: true,
+                uppercase: true,
+                lowercase: true,
+                symbols: true,
+                strict: true
+        })
+        //const tempPassword = '1234@newClient'; 
         const password_hash = await bcrypt.hash(tempPassword, 10)
 
         const result = await register([id, name, email, phone, role, password_hash])
