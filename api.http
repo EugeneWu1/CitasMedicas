@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "name": "Erick Mendez",
-  "email": "emendeza@unah.hn",
+  "email": "ronaldo.811.men@gmail.com",
   "phone": "33333333",
   "role": "admin"
 }
@@ -16,8 +16,19 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  //"username": "existinguser",
-  //"password": "securepassword"
+  "user":"ronaldo.811.men@gmail.com",
+  "password":"erick123"
+}
+
+###Actualizar Contraseña
+PATCH http://localhost:3000/api/auth/set-password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImExZjEzZjJmLTk3ODMtNGVlNi1hYTlkLThlNTkxMTU2MDZhYyIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkUk1rOTBkcU9xVDRmazVadi5BUkdTT1BJbWJFd2llRU5MMXV0enRtWnNVSkFlbzBUZ3JIMi4iLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1MzUyMjUzMSwiZXhwIjoxNzUzNTI2MTMxfQ.aZ92eUjgCgZdF5jFqwfwfLoKoNTySXG9wPoNIigClxU
+
+{ 
+ "old_password":"1234@newClient",
+ "new_password":"erick123", 
+ "confirm_password": "erick123"
 }
 
 ###Servicios 
