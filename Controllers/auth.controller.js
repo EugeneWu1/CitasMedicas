@@ -4,8 +4,9 @@ import {v4 as uuidv4} from 'uuid';
 import {register, loginUser, updatePasswordUser}from '../Models/auth.models.js';
 import {Resend} from 'resend';
 import { createAccountEmailHTML } from '../emailTemplate.js';
-import {authSchemaData} from '../Schemas/auth.schema.js';
+import {authSchemaData, authSchemaUpdateData} from '../Schemas/auth.schema.js';
 import generatePassword from 'generate-password';
+
 
 export const login = async(req, res) => {
     try {
@@ -179,7 +180,9 @@ export const setPassword = async (req, res) => {
             })
         }
 
-       
+       /// const updatePasswordSafe = authSchemaUpdateData({ old_password, new_password, confirm_password })
+       //TODO: APLICAR EL SCHEMA DE VALIDACION 
+    
 
         const newPasswordHash = await bcrypt.hash(new_password, 10)
         console.log('Nueva contraseña hasheada:', newPasswordHash)
