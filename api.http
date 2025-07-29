@@ -17,18 +17,18 @@ Content-Type: application/json
 
 {
   "user":"emendeza@unah.hn",
-  "password":"erick123"
+  "password":"*3}.tADk]e!Z"
 }
 
 ###Actualizar Contraseña
 PATCH http://localhost:3000/api/auth/set-password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVmMTU5ZjI5LTBlOGMtNGVjOS05NzBiLWI4OWE1N2MyNWYyNiIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkV0Ftck9UZDFaU1dtcmxLN3EwaXBjT2pYZjE3TU5GV3VENlVMOVRzUDg5YVRpNkpKa2xmdy4iLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1MzYwMDI1MiwiZXhwIjoxNzUzNjAzODUyfQ.Yc8Tbvr7kZvsTY82G2h3bw4GviW7XN0Fa-MthZiosws
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MzIzZDE1LWQyNGQtNGFkOS05ZDZlLTMwMzg5OTUyYTNiMiIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkOEswZ3FuNzhUWVdDQlYuSGlaMHo3LjdneXFoSC9SN2UycUFFMnIwQkhzTTJrZm9mRVdhY3UiLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1MzgyMDQyNiwiZXhwIjoxNzUzODI0MDI2fQ.cQM1NT-2SP-3gyF9zAUT07EH8NWBasMCKAohPWyKCR4
 
 { 
- "old_password":"|^b&vO!S_1UT",
- "new_password":"erick123", 
- "confirm_password": "erick123"
+ "old_password":"*3}.tADk]e!Z",
+ "new_password":"ErickMendez123#", 
+ "confirm_password": "ErickMendez123#"
 }
 
 ###Servicios 

@@ -12,14 +12,12 @@ role: z.enum(['admin', 'client'], { message: 'Rol debe ser admin o client' }),
 
 
 const authSchemaUpdate = z.object({
-    old_password: z.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-      message: "Debe tener al menos 8 caracteres, incluir letras y números.",
+
+    new_password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/, {
+      message: "La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un símbolo.",
     }),
-    new_password: z.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-      message: "Debe tener al menos 8 caracteres, incluir letras y números.",
-    }),
-    confirm_password: z.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-      message: "Debe tener al menos 8 caracteres, incluir letras y números.",
+    confirm_password: z.string().regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/, {
+      message: "La contraseña debe tener al menos una letra mayúscula, una letra minúscula, un número y un símbolo.",
     }),
   })
 

@@ -145,14 +145,25 @@ export const setPassword = async (req, res) => {
         }
 
         const token = authorization.split(' ')[1]
-        const { old_password, new_password, confirm_password } = req.body
+
+        // SANEAR DATOS CON SCHEMA AL INICIO
+        const data = req.body
+        const {old_password} = req.body
+        const { success, error, data: safeData } = authSchemaUpdateData(data)
+
+        if (!success) {
+            return res.status(400).json(error)  // No necesitas "error.errors" si lo usa así tu profesor
+        }
+
+// Aquí sí puedes desestructurar con seguridad porque ya validaste que success === true
+const {new_password, confirm_password } = safeData
 
         console.log('Token recibido:', token)
         console.log('JWT_SECRET:', process.env.JWT_SECRET)
 
         // Verificar el token
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        console.log('Token decodificado:', decoded)
+        //console.log('Token decodificado:', decoded)
 
         const { id, password_hash, mustChangePassword } = decoded
 
@@ -180,12 +191,8 @@ export const setPassword = async (req, res) => {
             })
         }
 
-       /// const updatePasswordSafe = authSchemaUpdateData({ old_password, new_password, confirm_password })
-       //TODO: APLICAR EL SCHEMA DE VALIDACION 
-    
-
         const newPasswordHash = await bcrypt.hash(new_password, 10)
-        console.log('Nueva contraseña hasheada:', newPasswordHash)
+        //console.log('Nueva contraseña hasheada:', newPasswordHash)
 
         await updatePasswordUser(id, newPasswordHash)
 
