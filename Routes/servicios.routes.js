@@ -1,5 +1,6 @@
 import {Router} from 'express'
-//import{isAuth} from '../middleewares/isAuth.js'
+import{ isAdmin } from '../middlewares/isAdmin.js'
+
 
 import {
     getAll, availableService,createService, updateService,changeAvailability ,deleteService
@@ -16,16 +17,16 @@ serviceRouter.get('/',(req,res) => {
 serviceRouter.get('/disponibilidad',availableService)
 
 //Crear un servicio
-serviceRouter.post('/',createService)
+serviceRouter.post('/',isAdmin,createService)
 
 //Actualizar servicio
-serviceRouter.put('/:id',updateService)
+serviceRouter.put('/:id',isAdmin,updateService)
 
 //Actualizar disponibilidad
-serviceRouter.put('/:id/disponibilidad', changeAvailability)
+serviceRouter.put('/:id/disponibilidad',isAdmin, changeAvailability)
 
 //Borrar un servicio
-serviceRouter.delete('/:id',deleteService)
+serviceRouter.delete('/:id',isAdmin,deleteService)
 
 export default serviceRouter
 //TODO: Agregar isAuth update y delete

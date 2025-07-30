@@ -8,7 +8,7 @@ Content-Type: application/json
   "name": "Erick Mendez",
   "email": "emendeza@unah.hn",
   "phone": "31807317",
-  "role": "admin"
+  "role": "client"
 }
 
 ###Inicio de Sesión
@@ -17,16 +17,16 @@ Content-Type: application/json
 
 {
   "user":"emendeza@unah.hn",
-  "password":"*3}.tADk]e!Z"
+  "password":".xf<.tE.q7UC"
 }
 
 ###Actualizar Contraseña
 PATCH http://localhost:3000/api/auth/set-password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MzIzZDE1LWQyNGQtNGFkOS05ZDZlLTMwMzg5OTUyYTNiMiIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkOEswZ3FuNzhUWVdDQlYuSGlaMHo3LjdneXFoSC9SN2UycUFFMnIwQkhzTTJrZm9mRVdhY3UiLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1MzgyMDQyNiwiZXhwIjoxNzUzODI0MDI2fQ.cQM1NT-2SP-3gyF9zAUT07EH8NWBasMCKAohPWyKCR4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1OTk4ZGQ1LTRlZjItNDU4Ni1hYWQyLTcxNTU2MDhkOTBmOCIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkdHViOUF2cmxVcVJNL2xQTzVJNE8uLnVGNFRRbjRIbVBKZzhIVkY2WWRnZ0JIWVY5M04ubmEiLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1MzkwODcwMSwiZXhwIjoxNzUzOTEyMzAxfQ.IUk6t93l1a1NgmJMX82hVw20InNcb91VozTLMo7k2MU
 
 { 
- "old_password":"*3}.tADk]e!Z",
+ "old_password":".xf<.tE.q7UC",
  "new_password":"ErickMendez123#", 
  "confirm_password": "ErickMendez123#"
 }
