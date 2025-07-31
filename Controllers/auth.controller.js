@@ -8,7 +8,7 @@ import {authSchemaData, authSchemaUpdateData} from '../Schemas/auth.schema.js';
 import generatePassword from 'generate-password';
 
 
-export const login = async(req, res) => {
+export const login = async(req, res,next) => {
     try {
         //user es el email del usuario 
         const { user, password } = req.body
@@ -19,11 +19,9 @@ export const login = async(req, res) => {
 
         //validacion usuario y contraseña con datos obtenidos de la base de datos
         if (!await bcrypt.compare(password, data.password_hash)) {
-            res.status(401).json({
-                success: false, 
-                message: 'Usuario o contraseña incorrectos'
-            })
-            return
+            const error = new Error('Usuario o contraseña incorrectos');
+            error.status = 401;
+            return next(error); // Delegar el manejo de errores al middleware
         }
 
         //validar si el usuario debe cambiar la contraseña
@@ -69,20 +67,19 @@ export const login = async(req, res) => {
         })
     } catch (error) {
         console.error('Error en login:', error)
-        res.status(500).json({
-            success: false,
-            message: 'Error interno del servidor'
-        })
+        error.status = 500;
+        error.message = 'Error interno del servidor';
+        return next(error);
     }
 }
 
-export const createClient = async (req, res) => {
+export const createClient = async (req, res,next) => {
     try {
         //const { name: nameReq, email: emailReq, phone: phoneReq, role: roleReq } = req.body
 
         const createSafe = authSchemaData(req.body)
 
-        if(createSafe.success ===false){
+        if(createSafe.success === false){
             return res.status(400).json({
                 success: false,
                 message: 'Error en los datos de entrada',
@@ -125,23 +122,20 @@ export const createClient = async (req, res) => {
         })
     } catch (error) {
         console.error('Error en createClient:', error)
-        res.status(400).json({
-            success: false,
-            message: 'Error al crear el usuario',
-            error: error.message
-        })
+        error.status = 400;
+        error.message = 'Error al crear usuario';
+        return next(error);
     }
 }
 
-export const setPassword = async (req, res) => {
+export const setPassword = async (req, res,next) => {
     try {
         const { authorization } = req.headers
         
         if (!authorization || !authorization.startsWith('Bearer ')) {
-            return res.status(401).json({
-                success: false,
-                message: 'Token de autorización requerido'
-            })
+            const error = new Error('Token de autorización requerido');
+            error.status = 401;
+            return next(error);
         }
 
         const token = authorization.split(' ')[1]
@@ -169,11 +163,11 @@ const {new_password, confirm_password } = safeData
 
         // Verificar que el token es para cambio de contraseña
         if (!mustChangePassword) {
-            return res.status(401).json({
-                success: false,
-                message: 'Token no válido para cambio de contraseña'
-            })
+            const error = new Error('Token no válido para cambio de contraseña');
+            error.status = 401;
+            return next(error);
         }
+
 
         // Verificar la contraseña anterior
         if (!await bcrypt.compare(old_password, password_hash)) {
@@ -185,11 +179,11 @@ const {new_password, confirm_password } = safeData
 
         // Validar que las contraseñas nuevas coincidan
         if (new_password !== confirm_password) {
-            return res.status(400).json({
-                success: false,
-                message: 'Las contraseñas nuevas no coinciden'
-            })
+            const error = new Error('Las contraseñas nuevas no coinciden');
+            error.status = 400;
+            return next(error);
         }
+
 
         const newPasswordHash = await bcrypt.hash(new_password, 10)
         //console.log('Nueva contraseña hasheada:', newPasswordHash)
@@ -204,23 +198,20 @@ const {new_password, confirm_password } = safeData
     } catch (error) {
         console.error('Error en setPassword:', error)
         
-        if (error.name === 'TokenExpiredError') {
-            return res.status(401).json({
-                success: false,
-                message: 'El token para cambiar contraseña ha expirado'
-            })
-        }
-        
-        if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({
-                success: false,
-                message: 'Token inválido'
-            })
-        }
+        if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError') {
+            error.status = 401;
 
-        res.status(500).json({
-            success: false,
-            message: 'Error interno del servidor al cambiar la contraseña'
-        })
+            if (error.name === 'TokenExpiredError') {
+                error.message = 'El token para cambiar contraseña ha expirado';
+            } else {
+                error.message = 'Token inválido';
+            }
+            return next(error);
+            }
+
+            // Para cualquier otro error
+            error.status = error.status || 500;
+            error.message = error.message || 'Error interno del servidor al cambiar la contraseña';
+            next(error);
     }
 }

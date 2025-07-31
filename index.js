@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import helmet from "helmet";
 import { rateLimit } from 'express-rate-limit'
 import cors from 'cors'
+import errorHandler from './middlewares/errorHandler.js'
 
 const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
@@ -50,13 +51,14 @@ app.use('/servicios',serviceRouter)
 
 
 //Ruta por defecto
-app.use((req,res)=> {
-   res.status(404).json(
-      {
-         message: `${req.url} no encontrada`
-      }
-   )
+app.use((req, res, next) => {
+    const error = new Error(`${req.url} no encontrada`);
+    error.status = 404;
+    next(error); //Error del Error Handler
 })
+
+//Middleware para manejar errores
+app.use(errorHandler)
 
 app.listen(PORT, () => {
    console.log(`El servidor esta corriendo en el puerto http://localhost:${PORT}`)

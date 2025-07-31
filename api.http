@@ -5,9 +5,9 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "Erick Mendez",
-  "email": "emendeza@unah.hn",
-  "phone": "31807317",
+  "name": "Eugene Wu",
+  "email": "eugenewu@unah.hn",
+  "phone": "11223344",
   "role": "client"
 }
 
