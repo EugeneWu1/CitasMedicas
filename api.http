@@ -5,10 +5,10 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-  "name": "Eugene Wu",
-  "email": "eugenewu@unah.hn",
-  "phone": "11223344",
-  "role": "client"
+  "name": "Erick Mendez",
+  "email": "emendeza@unah.hn",
+  "phone": "33333333",
+  "role": "admin"
 }
 
 ###Inicio de Sesión
@@ -17,16 +17,16 @@ Content-Type: application/json
 
 {
   "user":"emendeza@unah.hn",
-  "password":".xf<.tE.q7UC"
+  "password":"ErickMendez123#"
 }
 
 ###Actualizar Contraseña
 PATCH http://localhost:3000/api/auth/set-password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1OTk4ZGQ1LTRlZjItNDU4Ni1hYWQyLTcxNTU2MDhkOTBmOCIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkdHViOUF2cmxVcVJNL2xQTzVJNE8uLnVGNFRRbjRIbVBKZzhIVkY2WWRnZ0JIWVY5M04ubmEiLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1MzkwODcwMSwiZXhwIjoxNzUzOTEyMzAxfQ.IUk6t93l1a1NgmJMX82hVw20InNcb91VozTLMo7k2MU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkejlidjloSk5OS2F2OElxWk1zZGZ6LmxPclpPSUtBRnFGdUZVaDNLSkVGVmc5YTVHRUR6SnUiLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1NDI2MDg2MSwiZXhwIjoxNzU0MjY0NDYxfQ.2q4GGpuaL8NRPGedf1rbzeCUi_aoRekP4PcLwaxViyk
 
 { 
- "old_password":".xf<.tE.q7UC",
+ "old_password":"-jyl}2nzQa5P",
  "new_password":"ErickMendez123#", 
  "confirm_password": "ErickMendez123#"
 }

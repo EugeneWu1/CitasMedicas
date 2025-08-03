@@ -15,7 +15,7 @@ export const login = async(req, res,next) => {
 
         //valida la info en la base de datos
         const data = await loginUser(user)
-        console.log(data)
+        //console.log(data)
 
         //validacion usuario y contraseña con datos obtenidos de la base de datos
         if (!await bcrypt.compare(password, data.password_hash)) {
@@ -59,11 +59,15 @@ export const login = async(req, res,next) => {
 
         delete data.password_hash 
 
+        //unicamente enviar informacion necesaria no confidencial
         res.json({
             success: true,
             message: 'Usuario autenticado correctamente',
-            data: data,
+            data:{role: data.role,
+                name: data.name
+            },
             token
+           
         })
     } catch (error) {
         console.error('Error en login:', error)
@@ -152,8 +156,8 @@ export const setPassword = async (req, res,next) => {
 // Aquí sí puedes desestructurar con seguridad porque ya validaste que success === true
 const {new_password, confirm_password } = safeData
 
-        console.log('Token recibido:', token)
-        console.log('JWT_SECRET:', process.env.JWT_SECRET)
+        //console.log('Token recibido:', token)
+        //console.log('JWT_SECRET:', process.env.JWT_SECRET)
 
         // Verificar el token
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
