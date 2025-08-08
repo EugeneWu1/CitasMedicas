@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken' // para verificar el token
 
 
-export const isAuth = (req, res, next) => {
+export const verifyToken = (req, res, next) => {
 
     // obtener los encabezados de la petición (token)
     const { authorization } = req.headers

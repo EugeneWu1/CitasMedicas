@@ -1,3 +1,4 @@
 node_modules/
 .env
 clinica-docker/
+API_Reservacion_Citas.md
