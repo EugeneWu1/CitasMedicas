@@ -20,6 +20,15 @@ Content-Type: application/json
   "password":"ErickMendez123#"
 }
 
+###Registro de Usuario
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "user":"easl2991@gmail.com",
+  "password":"ErickMendez123#"
+}
+
 ###Actualizar Contraseña
 PATCH http://localhost:3000/api/auth/set-password
 Content-Type: application/json
@@ -34,14 +43,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 ###Servicios 
 
 ### Consulta de todos los servicios
-GET http://localhost:3000/servicios
+GET http://localhost:3000/api/servicios
 
 ### Consulta de servicios disponibles
-GET http://localhost:3000/servicios/disponibilidad?available=true
+GET http://localhost:3000/api/servicios/disponibilidad?available=true
 
 ### Crear un servicio
-POST http://localhost:3000/servicios
+POST http://localhost:3000/api/servicios
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ2NDI1MjEsImV4cCI6MTc1NDY4NTcyMX0.3W_MhwiWbiA4oq-vHTNfC1f4BIoyLTjo0Wx27kKZMpw
 
 {
   "nombre": "Consulta General",
@@ -51,9 +61,23 @@ Content-Type: application/json
   "disponible": true
 }
 
-### Actualizar un servicio
-PUT http://localhost:3000/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0
+### Crear un servicio
+POST http://localhost:3000/api/servicios
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA
+
+{
+  "nombre": "Cirugía",
+  "descripcion": "Servicio de cirugía general",
+  "duracion": 120,
+  "precio": 15000.00,
+  "disponible": true
+}
+
+### Actualizar un servicio
+PUT http://localhost:3000/api/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA
 
 {
   "nombre": "Consulta General Actualizada",
@@ -65,14 +89,14 @@ Content-Type: application/json
 
 ### Actualizar disponibilidad
 
-PUT http://localhost:3000/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0/disponibilidad
+PUT http://localhost:3000/api/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0/disponibilidad
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA
 
 {
   "disponible": false
 }
 
 ### Eliminar un servicio
-DELETE http://localhost:3000/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0
-
-###Citas
+DELETE http://localhost:3000/api/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA

@@ -1,6 +1,8 @@
 import express from 'express'
 import userRouter from './Routes/auth.routes.js';
 import serviceRouter from './Routes/servicios.routes.js'
+import appointmentRouter from './Routes/citas.routes.js';
+import notificationRouter from './Routes/notificationes.routes.js';
 import dotenv from 'dotenv'
 import helmet from "helmet";
 import { rateLimit } from 'express-rate-limit'
@@ -42,13 +44,24 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Bearer', 'api-key']
 }))
 
-//Rutas
-app.use('/api/auth',userRouter)
 
+//Router principal
+const apiRouter = express.Router()
+
+// Ruta principal con el prefijo /api
+app.use('/api', apiRouter)
+
+//Rutas
+apiRouter.use('/auth',userRouter)
 
 //servicios
-app.use('/servicios',serviceRouter)
+apiRouter.use('/servicios',serviceRouter)
 
+//citas
+apiRouter.use('/citas',appointmentRouter)
+
+//notificaciones
+apiRouter.use('/notificaciones',notificationRouter)
 
 //Ruta por defecto
 app.use((req, res, next) => {
