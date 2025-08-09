@@ -20,17 +20,34 @@ import { validateAppointments, validateAppointmentUpdate, validateAppointmentId,
 import { v4 as uuidv4 } from 'uuid';
 
 
-//Consultar todas las citas del cliente
+//Consultar todas las citas del cliente con paginacion
 export const getAll = async (req, res, next) => {
     try {
-        const { id } = req.params
+        const { id } = req.params;
+        
+        // Obtener parametros de paginacion de query parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        // Validar parametros de paginacion
+        if (page < 1) {
+            const validationError = new Error('El número de página debe ser mayor a 0');
+            validationError.status = 400;
+            return next(validationError);
+        }
+        
+        if (limit < 1 || limit > 100) {
+            const validationError = new Error('El límite debe estar entre 1 y 100');
+            validationError.status = 400;
+            return next(validationError);
+        }
        
         // Validar el ID
-        const idValidation = validateUserId(id)
+        const idValidation = validateUserId(id);
         if (!idValidation.success) {
-            const validationError = new Error('ID de usuario inválido')
-            validationError.status = 400
-            return next(validationError)
+            const validationError = new Error('ID de usuario inválido');
+            validationError.status = 400;
+            return next(validationError);
         }
 
         // Verificar que el usuario existe
@@ -42,25 +59,27 @@ export const getAll = async (req, res, next) => {
             });
         }
 
-        const appointmentsDB = await getAllAppointmentsFromUser(id)
+        const result = await getAllAppointmentsFromUser(id, page, limit);
 
-        
         // Verificar si el usuario no tiene citas
-        if (!appointmentsDB || appointmentsDB.length === 0) {
-            return res.status(204).send(); // 204 No Content
+        if (!result.data || result.data.length === 0) {
+            return res.status(200).json({
+                success: true,
+                data: [],
+                pagination: result.pagination
+            });
         }
 
         res.status(200).json({
             success: true,
-            data: appointmentsDB
-        })
+            data: result.data,
+            pagination: result.pagination
+        });
 
     } catch (error) {
         // Manejo de errores
-        return next(error)
+        return next(error);
     }
-
-    //TODO: PAGINACION
 }
 
 //Crear una cita 
@@ -175,7 +194,9 @@ export const remove = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: 'Cita eliminada correctamente',
-            data: result
+            data:{
+                Id: id,
+            }
         });
 
     } catch (error) {
@@ -183,24 +204,45 @@ export const remove = async (req, res, next) => {
     }
 }
 
-//ver todas las citas agendadas por el cliente
+//ver todas las citas agendadas por el cliente con paginacion
 export const getAllScheduled = async (req, res, next) => {
     try {
-        const appointmentsDB = await getAllScheduledAppointments()
+        // Obtener parametros de paginacion de query parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        // Validar parametros de paginacion
+        if (page < 1) {
+            const validationError = new Error('El número de página debe ser mayor a 0');
+            validationError.status = 400;
+            return next(validationError);
+        }
+        
+        if (limit < 1 || limit > 100) {
+            const validationError = new Error('El límite debe estar entre 1 y 100');
+            validationError.status = 400;
+            return next(validationError);
+        }
+
+        const result = await getAllScheduledAppointments(page, limit);
 
         // Verificar si no hay citas programadas
-        if (!appointmentsDB || appointmentsDB.length === 0) {
-            return res.status(204).send(); // 204 No Content
+        if (!result.data || result.data.length === 0) {
+            return res.status(200).json({
+                success: true,
+                data: [],
+                pagination: result.pagination
+            });
         }
 
         res.status(200).json({
             success: true,
-            data: appointmentsDB
-        })
+            data: result.data,
+            pagination: result.pagination
+        });
 
     } catch (error) {
-
-        return next(error)
+        return next(error);
     }
 }
 
@@ -278,46 +320,87 @@ export const update = async (req, res, next) => {
 }
 
 
-// Obtener todas las citas canceladas
+// Obtener todas las citas canceladas con paginacion
 export const getAllCancelled = async (req, res, next) => {
     try {
+        // Obtener parametros de paginacion de query parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        // Validar parametros de paginacion
+        if (page < 1) {
+            const validationError = new Error('El número de página debe ser mayor a 0');
+            validationError.status = 400;
+            return next(validationError);
+        }
+        
+        if (limit < 1 || limit > 100) {
+            const validationError = new Error('El límite debe estar entre 1 y 100');
+            validationError.status = 400;
+            return next(validationError);
+        }
 
-        const appointmentsDB = await getAllCancelledAppointments()
+        const result = await getAllCancelledAppointments(page, limit);
 
         // Verificar si no hay citas canceladas
-        if (!appointmentsDB || appointmentsDB.length === 0) {
-            return res.status(204).send(); // 204 No Content
+        if (!result.data || result.data.length === 0) {
+            return res.status(200).json({
+                success: true,
+                data: [],
+                pagination: result.pagination
+            });
         }
 
         res.status(200).json({
             success: true,
-            data: appointmentsDB
-        })
+            data: result.data,
+            pagination: result.pagination
+        });
 
     } catch (error) {
-
-        return next(error)
+        return next(error);
     }
 }
 
-//Obtener todas las citas completadas
+//Obtener todas las citas completadas con paginacion
 export const getAllCompleted = async (req, res, next) => {
     try {
-        const appointmentsDB = await getAllCompletedAppointments();
+        // Obtener parametros de paginacion de query parameters
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        // Validar parametros de paginacion
+        if (page < 1) {
+            const validationError = new Error('El número de página debe ser mayor a 0');
+            validationError.status = 400;
+            return next(validationError);
+        }
+        
+        if (limit < 1 || limit > 100) {
+            const validationError = new Error('El límite debe estar entre 1 y 100');
+            validationError.status = 400;
+            return next(validationError);
+        }
+
+        const result = await getAllCompletedAppointments(page, limit);
 
         // Verificar si no hay citas completadas
-        if (!appointmentsDB || appointmentsDB.length === 0) {
-            return res.status(204).send(); // 204 No Content
+        if (!result.data || result.data.length === 0) {
+            return res.status(200).json({
+                success: true,
+                data: [],
+                pagination: result.pagination
+            });
         }
 
         res.status(200).json({
             success: true,
-            data: appointmentsDB
-        })
+            data: result.data,
+            pagination: result.pagination
+        });
 
     } catch (error) {
-
-        return next(error)
+        return next(error);
     } 
 }
 

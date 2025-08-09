@@ -1,8 +1,16 @@
 import pool from '../Config/db.js';
 
-//Funcion para listar todas las citas
-export const getAllAppointmentsFromUser = async (id) => {
+//Funcion para listar todas las citas con paginacion
+export const getAllAppointmentsFromUser = async (id, page = 1, limit = 10) => {
+    // Calcular el offset
+    const offset = (page - 1) * limit;
 
+    // Query para obtener el total de registros
+    const countQuery = `SELECT COUNT(*) as total 
+        FROM appointment as a
+        WHERE a.user_id = UUID_TO_BIN(?)`;
+
+    // Query principal con paginacion
     const query = `SELECT a.appointment_id,
         BIN_TO_UUID(a.user_id) as user_id,
         u.name as user_name,
@@ -21,13 +29,29 @@ export const getAllAppointmentsFromUser = async (id) => {
     FROM appointment as a
     LEFT JOIN users as u ON a.user_id = u.user_id
     LEFT JOIN service as s ON a.service_id = s.service_id
-    WHERE a.user_id = UUID_TO_BIN(?)`
+    WHERE a.user_id = UUID_TO_BIN(?)
+    ORDER BY a.appointment_date DESC, a.start_time DESC
+    LIMIT ? OFFSET ?`;
 
-    //Mandar el query a la base de datos
-    const [results] = await pool.query(query, [id])
+    // Ejecutar ambas consultas
+    const [countResult] = await pool.query(countQuery, [id]);
+    const [results] = await pool.query(query, [id, limit, offset]);
     
-    //Retornar los datos encontrados por el query
-    return results
+    const total = countResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    // Retornar los datos con metadatos de paginacion
+    return {
+        data: results,
+        pagination: {
+            currentPage: page,
+            totalPages,
+            totalItems: total,
+            itemsPerPage: limit,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1
+        }
+    };
 }
 
 //Funcion para insertar una cita
@@ -83,7 +107,7 @@ export const deleteAppointment = async (id) => {
         await conn.commit()
         return {
             success: result.affectedRows > 0,
-            message: result.affectedRows > 0 ? 'Cita eliminada correctamente' : 'No se encontró la cita'
+            affectedRows: result.affectedRows
         }
 
     } catch (error) {
@@ -97,8 +121,17 @@ export const deleteAppointment = async (id) => {
     }
 }
 
-//Funcion para obtener todas las citas programadas
-export const getAllScheduledAppointments = async () => {
+//Funcion para obtener todas las citas programadas con paginacion
+export const getAllScheduledAppointments = async (page = 1, limit = 10) => {
+    // Calcular el offset
+    const offset = (page - 1) * limit;
+
+    // Query para obtener el total de registros
+    const countQuery = `SELECT COUNT(*) as total 
+        FROM appointment as a
+        WHERE a.status = 'scheduled'`;
+
+    // Query principal con paginacion
     const query = `SELECT a.appointment_id,
         BIN_TO_UUID(a.user_id) as user_id,
         u.name as user_name,
@@ -117,13 +150,29 @@ export const getAllScheduledAppointments = async () => {
     FROM appointment as a
     LEFT JOIN users as u ON a.user_id = u.user_id
     LEFT JOIN service as s ON a.service_id = s.service_id
-    WHERE a.status = 'scheduled'`
+    WHERE a.status = 'scheduled'
+    ORDER BY a.appointment_date ASC, a.start_time ASC
+    LIMIT ? OFFSET ?`;
 
-    //Mandar el query a la base de datos
-    const [results] = await pool.query(query)
+    // Ejecutar ambas consultas
+    const [countResult] = await pool.query(countQuery);
+    const [results] = await pool.query(query, [limit, offset]);
+    
+    const total = countResult[0].total;
+    const totalPages = Math.ceil(total / limit);
 
-    //Retornar los datos encontrados por el query
-    return results
+    // Retornar los datos con metadatos de paginacion
+    return {
+        data: results,
+        pagination: {
+            currentPage: page,
+            totalPages,
+            totalItems: total,
+            itemsPerPage: limit,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1
+        }
+    };
 }
 
 
@@ -336,9 +385,17 @@ export const convertUserIdToUuid = async (binary_user_id) => {
 }
 
 
-//Funcion para obtener todas las citas en status cancelled
-export const getAllCancelledAppointments = async() => {
+//Funcion para obtener todas las citas en status cancelled con paginacion
+export const getAllCancelledAppointments = async(page = 1, limit = 10) => {
+    // Calcular el offset
+    const offset = (page - 1) * limit;
 
+    // Query para obtener el total de registros
+    const countQuery = `SELECT COUNT(*) as total 
+        FROM appointment as a
+        WHERE a.status = 'cancelled'`;
+
+    // Query principal con paginacion
     const query =`SELECT a.appointment_id,
         BIN_TO_UUID(a.user_id) as user_id,
         u.name as user_name,
@@ -357,15 +414,42 @@ export const getAllCancelledAppointments = async() => {
     FROM appointment as a
     LEFT JOIN users as u ON a.user_id = u.user_id
     LEFT JOIN service as s ON a.service_id = s.service_id
-    WHERE a.status = 'cancelled'`
+    WHERE a.status = 'cancelled'
+    ORDER BY a.updated_at DESC
+    LIMIT ? OFFSET ?`;
 
-    const [results] = await pool.query(query)
-    return results
+    // Ejecutar ambas consultas
+    const [countResult] = await pool.query(countQuery);
+    const [results] = await pool.query(query, [limit, offset]);
+    
+    const total = countResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    // Retornar los datos con metadatos de paginacion
+    return {
+        data: results,
+        pagination: {
+            currentPage: page,
+            totalPages,
+            totalItems: total,
+            itemsPerPage: limit,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1
+        }
+    };
 }
 
-//Funcion para obtener todas las citas en status completed
-export const getAllCompletedAppointments = async() => {
+//Funcion para obtener todas las citas en status completed con paginacion
+export const getAllCompletedAppointments = async(page = 1, limit = 10) => {
+    // Calcular el offset
+    const offset = (page - 1) * limit;
 
+    // Query para obtener el total de registros
+    const countQuery = `SELECT COUNT(*) as total 
+        FROM appointment as a
+        WHERE a.status = 'completed'`;
+
+    // Query principal con paginacion
     const query =`SELECT a.appointment_id,
         BIN_TO_UUID(a.user_id) as user_id,
         u.name as user_name,
@@ -384,10 +468,29 @@ export const getAllCompletedAppointments = async() => {
     FROM appointment as a
     LEFT JOIN users as u ON a.user_id = u.user_id
     LEFT JOIN service as s ON a.service_id = s.service_id
-    WHERE a.status = 'completed'`
+    WHERE a.status = 'completed'
+    ORDER BY a.appointment_date DESC, a.start_time DESC
+    LIMIT ? OFFSET ?`;
 
-    const [results] = await pool.query(query)
-    return results
+    // Ejecutar ambas consultas
+    const [countResult] = await pool.query(countQuery);
+    const [results] = await pool.query(query, [limit, offset]);
+    
+    const total = countResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    // Retornar los datos con metadatos de paginacion
+    return {
+        data: results,
+        pagination: {
+            currentPage: page,
+            totalPages,
+            totalItems: total,
+            itemsPerPage: limit,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1
+        }
+    };
 }
 
 

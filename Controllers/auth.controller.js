@@ -13,9 +13,17 @@ export const login = async(req, res,next) => {
         //user es el email del usuario 
         const { user, password } = req.body
 
+
         //valida la info en la base de datos
         const data = await loginUser(user)
         //console.log(data)
+
+        // Validar si el usuario existe
+        if (!data) {
+            const error = new Error('Usuario o contraseña incorrectos');
+            error.status = 401;
+            return next(error); // Delegar el manejo de errores al middleware
+        }
 
         //validacion usuario y contraseña con datos obtenidos de la base de datos
         if (!await bcrypt.compare(password, data.password_hash)) {

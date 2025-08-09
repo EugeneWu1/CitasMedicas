@@ -15,27 +15,28 @@ import {
 
 const appointmentRouter = Router()
 
+//Ver todas las citas agendadas por el cliente (admin) - DEBE IR ANTES DE /:id
+appointmentRouter.get('/admin/scheduled', [verifyToken, isAdmin], getAllScheduled)
+
+//Obtener todas las citas canceladas (admin) - DEBE IR ANTES DE /:id
+appointmentRouter.get('/admin/cancelled', [verifyToken, isAdmin], getAllCancelled)
+
+//Obtener todas las citas completadas (admin) - DEBE IR ANTES DE /:id
+appointmentRouter.get('/admin/completed', [verifyToken, isAdmin], getAllCompleted)
+
+//Obtener horarios disponibles - DEBE IR ANTES DE /:id
+appointmentRouter.get('/availableSlots', verifyToken, getAvailableSlots)
+
 //Consultar todas las citas del cliente
 appointmentRouter.get('/:id',verifyToken, getAll)
 
 //Crear una cita por el cliente 
 appointmentRouter.post('/',verifyToken,create)
 
-//Borrar una cita por el cliente
-appointmentRouter.delete('/:id',verifyToken, remove)
-
-//Ver todas las citas agendadas por el cliente
-appointmentRouter.get('/admin/scheduled', [verifyToken, isAdmin], getAllScheduled)
-
 //Actualizar cita por el cliente
 appointmentRouter.put('/:id',verifyToken, update)
 
-//Obtener todas las citas canceladas
-appointmentRouter.get('/admin/cancelled', [verifyToken, isAdmin], getAllCancelled)
-
-//Obtener todas las citas completadas
-appointmentRouter.get('/admin/completed', [verifyToken, isAdmin], getAllCompleted)
-
-appointmentRouter.get('/availableSlots', verifyToken, getAvailableSlots)
+//Borrar una cita por el cliente
+appointmentRouter.delete('/:id',verifyToken, remove)
 
 export default appointmentRouter

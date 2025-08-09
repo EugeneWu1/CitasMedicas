@@ -8,6 +8,10 @@ import helmet from "helmet";
 import { rateLimit } from 'express-rate-limit'
 import cors from 'cors'
 import errorHandler from './middlewares/errorHandler.js'
+import { notFoundHandler } from './middlewares/asyncHandler.js'
+
+// Configurar dotenv ANTES de usar variables de entorno
+dotenv.config()
 
 const limiter = rateLimit({
     windowMs: 5 * 60 * 1000,
@@ -25,8 +29,9 @@ const app = express()
 
 const PORT = process.env.PORT || 3000
 
+// Middlewares globales
 app.use(express.json())
-dotenv.config()
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(helmet());
 app.use(limiter)
 
@@ -34,6 +39,7 @@ app.use(cors({
     // configuración de los origenes permitidos
     origin: [
         'http://localhost:3000',
+        'http://localhost:4200',
         'https://emewesdev.com/',
         'https://prod.server.com',
         'https://test.server.com'
@@ -51,26 +57,17 @@ const apiRouter = express.Router()
 // Ruta principal con el prefijo /api
 app.use('/api', apiRouter)
 
-//Rutas
+//Rutas de la aplicación
 apiRouter.use('/auth',userRouter)
-
-//servicios
 apiRouter.use('/servicios',serviceRouter)
-
-//citas
 apiRouter.use('/citas',appointmentRouter)
-
-//notificaciones
 apiRouter.use('/notificaciones',notificationRouter)
 
-//Ruta por defecto
-app.use((req, res, next) => {
-    const error = new Error(`${req.url} no encontrada`);
-    error.status = 404;
-    next(error); //Error del Error Handler
-})
 
-//Middleware para manejar errores
+// Middleware para rutas no encontradas
+app.use(notFoundHandler);
+
+// Middleware para manejar errores - DEBE IR AL FINAL
 app.use(errorHandler)
 
 app.listen(PORT, () => {
