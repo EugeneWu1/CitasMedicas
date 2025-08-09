@@ -1,10 +1,81 @@
 import pool from '../Config/db.js';
 
+//Funcion para verificar si existe una cita duplicada
+export const checkDuplicateAppointment = async (user_id, appointment_date, start_time, excludeId = null) => {
+    let query = `
+        SELECT appointment_id 
+        FROM appointment 
+        WHERE user_id = UUID_TO_BIN(?) 
+        AND appointment_date = ? 
+        AND start_time = ? 
+        AND status != 'cancelled'
+    `;
+    
+    const params = [user_id, appointment_date, start_time];
+    
+    if (excludeId) {
+        query += ` AND appointment_id != ?`;
+        params.push(excludeId);
+    }
+    
+    const [results] = await pool.query(query, params);
+    return results.length > 0;
+};
+
+//Funcion para verificar conflictos de horario
+export const checkTimeConflict = async (appointment_date, start_time, end_time, excludeId = null) => {
+    let query = `
+        SELECT appointment_id 
+        FROM appointment 
+        WHERE appointment_date = ? 
+        AND status = 'scheduled'
+        AND (
+            (start_time <= ? AND end_time > ?) OR
+            (start_time < ? AND end_time >= ?) OR
+            (start_time >= ? AND end_time <= ?)
+        )
+    `;
+    
+    const params = [
+        appointment_date,
+        start_time, start_time,
+        end_time, end_time,
+        start_time, end_time
+    ];
+    
+    if (excludeId) {
+        query += ` AND appointment_id != ?`;
+        params.push(excludeId);
+    }
+    
+    const [results] = await pool.query(query, params);
+    return results.length > 0;
+};
+
+//Funcion para obtener información del servicio
+export const getServiceInfo = async (service_id) => {
+    const query = `SELECT duration, available, name FROM service WHERE service_id = ?`;
+    const [results] = await pool.query(query, [service_id]);
+    return results[0] || null;
+};
+
+//Funcion para calcular end_time basado en duration
+export const calculateEndTime = (start_time, duration) => {
+    const [hours, minutes, seconds] = start_time.split(':').map(Number);
+    const startTimeInMinutes = hours * 60 + minutes;
+    const endTimeInMinutes = startTimeInMinutes + duration;
+    
+    const endHours = Math.floor(endTimeInMinutes / 60);
+    const endMinutes = endTimeInMinutes % 60;
+    
+    return `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
+
 //Funcion para listar todas las citas
 export const getAllAppointmentsFromUser = async (id) => {
 
     const query = `SELECT a.appointment_id,
-        a.user_id,
+        BIN_TO_UUID(a.user_id) as user_id,
         u.name as user_name,
         u.email as user_email,
         a.service_id,
@@ -17,13 +88,14 @@ export const getAllAppointmentsFromUser = async (id) => {
         a.status,
         a.notes,
         a.created_at,
+        a.updated_at
     FROM appointment as a
     LEFT JOIN users as u ON a.user_id = u.user_id
     LEFT JOIN service as s ON a.service_id = s.service_id
-    WHERE a.user_id = ?`
+    WHERE a.user_id = UUID_TO_BIN(?)`
 
     //Mandar el query a la base de datos
-    const [results] = await pool.query(query);
+    const [results] = await pool.query(query, [id]);
     
     //Retornar los datos encontrados por el query
     return results;
@@ -35,14 +107,14 @@ export const createAppointment = async (citaData) => {
     const conn = await pool.getConnection();
 
     try {
-        conn.beginTransaction();
+        await conn.beginTransaction();
 
         const { appointment_id, user_id, service_id, appointment_date, start_time, end_time, status, notes } = citaData;
 
         const query = `INSERT INTO appointment (appointment_id, user_id, service_id, appointment_date, start_time, end_time, status, notes)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+                       VALUES (?, UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?)`;
     
-        await conn.execute(query, [
+        const [result] = await conn.execute(query, [
             appointment_id,
             user_id,
             service_id,
@@ -50,9 +122,7 @@ export const createAppointment = async (citaData) => {
             start_time,
             end_time,
             status,
-            notes,
-            new Date(),
-            new Date()
+            notes
         ]);
 
         await conn.commit();
@@ -101,7 +171,7 @@ export const deleteAppointment = async (id) => {
 //Funcion para obtener todas las citas programadas
 export const getAllScheduledAppointments = async () => {
     const query = `SELECT a.appointment_id,
-        a.user_id,
+        BIN_TO_UUID(a.user_id) as user_id,
         u.name as user_name,
         u.email as user_email,
         a.service_id,

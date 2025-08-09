@@ -1,4 +1,4 @@
-import {validateServices, validateServiceUpdate, validateAvailability} from '../Schemas/servicios.schema.js'
+import {validateServices, validateServiceUpdate, validateAvailability, validateServiceId} from '../Schemas/servicios.schema.js'
 import {getAllServicios,getServiciosPorDisponibilidad,cambiarDisponibilidad,insertServicio,updateServicio,deleteServicio} from '../Models/servicios.models.js'
 import {v4 as uuidv4} from 'uuid'
 
@@ -84,6 +84,14 @@ export const updateService = async (req,res,next) => {
     //Obtenemos el id del servicio que vamos a modificar
     const {id} = req.params
 
+    // Validar el ID
+    const idValidation = validateServiceId(id);
+    if (!idValidation.success) {
+        const validationError = new Error(idValidation.error.message);
+        validationError.status = 400;
+        return next(validationError);
+    }
+
     //Validamos con zod que el body cumpla con los requisitos esperados
     const dataValidada = validateServiceUpdate(req.body)
 
@@ -117,6 +125,14 @@ export const updateService = async (req,res,next) => {
 export const changeAvailability = async (req,res,next) => {
     //Obtenemos el id del servicio que vamos a modificar
     const {id} = req.params
+
+    // Validar el ID
+    const idValidation = validateServiceId(id);
+    if (!idValidation.success) {
+        const validationError = new Error(idValidation.error.message);
+        validationError.status = 400;
+        return next(validationError);
+    }
 
     //Validamos con zod que el body cumpla con los requisitos esperados
     const validacion = validateAvailability(req.body)

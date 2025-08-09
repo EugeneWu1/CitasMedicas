@@ -31,3 +31,10 @@ export const validateServiceUpdate = (data) => {
 export const validateAvailability = (data) => {
   return availabilitySchema.safeParse(data)
 }
+
+export const validateServiceId = (id) => {
+  return z.string().regex(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    'El service_id debe ser un UUID válido'
+  ).safeParse(id)
+}
