@@ -31,3 +31,39 @@ export const updatePasswordUser = async (id, password_hash) =>{
     return rows
 
 }
+
+
+// Función para obtener todos los usuarios
+export const getAllUsers = async () => {
+
+    const query = `SELECT 
+                    BIN_TO_UUID(user_id) as id,
+                    name,
+                    email,
+                    phone,
+                    role,
+                    created_at
+                   FROM users 
+                   ORDER BY created_at DESC`
+
+    const [results] = await pool.query(query)
+    return results
+
+}
+
+// funcion para ver usuarios por role
+export const getUsersByRole = async (role) => {
+    const query = `SELECT 
+                    BIN_TO_UUID(user_id) as id,
+                    name,
+                    email,
+                    phone,
+                    role,
+                    created_at
+                   FROM users 
+                   WHERE role = ?
+                   ORDER BY created_at DESC`
+
+    const [results] = await pool.query(query, [role])
+    return results
+}

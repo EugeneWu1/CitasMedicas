@@ -2,7 +2,7 @@ export const isAdmin = (req, res, next) => {
 
     const { role, id } = req.params
 
-    //TODO: validar en DDBB que el rol sea el mismo del token
+    //validar en DDBB que el rol sea el mismo del token
 
     if (role !== 'admin') {
         const error = new Error('Acceso denegado. Se requiere rol de administrador.');

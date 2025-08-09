@@ -4,17 +4,23 @@ import pool from '../Config/db.js';
 export const getAllAppointmentsFromUser = async (id) => {
 
     const query = `SELECT a.appointment_id,
-            a.user_id,
-            a.service_id,
-            a.appointment_date,
-            a.start_time,
-            a.end_time,
-            a.status,
-            a.notes,
-            a.created_at,
-            a.updated_at
-        FROM appointment as a
-        WHERE user_id = ?`
+        a.user_id,
+        u.name as user_name,
+        u.email as user_email,
+        a.service_id,
+        s.name as service_name,
+        s.duration as service_duration,
+        s.price as service_price,
+        a.appointment_date,
+        a.start_time,
+        a.end_time,
+        a.status,
+        a.notes,
+        a.created_at,
+    FROM appointment as a
+    LEFT JOIN users as u ON a.user_id = u.user_id
+    LEFT JOIN service as s ON a.service_id = s.service_id
+    WHERE a.user_id = ?`
 
     //Mandar el query a la base de datos
     const [results] = await pool.query(query);
@@ -95,17 +101,24 @@ export const deleteAppointment = async (id) => {
 //Funcion para obtener todas las citas programadas
 export const getAllScheduledAppointments = async () => {
     const query = `SELECT a.appointment_id,
-            a.user_id,
-            a.service_id,
-            a.appointment_date,
-            a.start_time,
-            a.end_time,
-            a.status,
-            a.notes,
-            a.created_at,
-            a.updated_at
-        FROM appointment as a
-        WHERE a.status = 'scheduled'`;
+        a.user_id,
+        u.name as user_name,
+        u.email as user_email,
+        a.service_id,
+        s.name as service_name,
+        s.duration as service_duration,
+        s.price as service_price,
+        a.appointment_date,
+        a.start_time,
+        a.end_time,
+        a.status,
+        a.notes,
+        a.created_at,
+        a.updated_at
+    FROM appointment as a
+    LEFT JOIN users as u ON a.user_id = u.user_id
+    LEFT JOIN service as s ON a.service_id = s.service_id
+    WHERE a.status = 'scheduled'`;
 
     //Mandar el query a la base de datos
     const [results] = await pool.query(query);
@@ -123,11 +136,10 @@ export const updateAppointment = async (id, citaData) => {
     try {
         await conn.beginTransaction();
 
-        const { user_id, service_id, appointment_date, start_time, end_time, status, notes } = citaData;
+        const { service_id, appointment_date, start_time, end_time, status, notes } = citaData;
 
         const query = `UPDATE appointment
-                       SET user_id = ?,
-                           service_id = ?,
+                       SET service_id = ?,
                            appointment_date = ?,
                            start_time = ?,
                            end_time = ?,
@@ -137,7 +149,6 @@ export const updateAppointment = async (id, citaData) => {
                        WHERE appointment_id = ?`;
 
         const [result] = await conn.execute(query, [
-            user_id,
             service_id,
             appointment_date,
             start_time,

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import {v4 as uuidv4} from 'uuid';
-import {register, loginUser, updatePasswordUser}from '../Models/auth.models.js';
+import {register, loginUser, updatePasswordUser, getAllUsers, getUsersByRole}from '../Models/auth.models.js';
 import {Resend} from 'resend';
 import { createAccountEmailHTML } from '../emailTemplate.js';
 import {authSchemaData, authSchemaUpdateData} from '../Schemas/auth.schema.js';
@@ -217,5 +217,63 @@ const {new_password, confirm_password } = safeData
             error.status = error.status || 500;
             error.message = error.message || 'Error interno del servidor al cambiar la contraseña';
             next(error);
+    }
+}
+
+
+// Controlador para obtener todos los usuarios
+export const getUsers = async (req, res, next) => {
+    try {
+        const users = await getAllUsers()
+
+        res.json({
+            success: true,
+            message: 'Usuarios obtenidos correctamente',
+            data: users,
+            total: users.length
+        })
+
+    } catch (error) {
+
+        next(error)
+    }
+}
+
+
+
+
+// Controlador para obtener usuarios por rol
+export const getByRole = async (req, res, next) => {
+    try {
+        const { role } = req.query
+
+
+        if (!role) {
+            const error = new Error('El parámetro role es requerido')
+            error.status = 400
+            return next(error)
+        }
+
+        // Validar que el role sea 'client' o 'admin'
+        if (role !== 'client' && role !== 'admin') {
+            const error = new Error('El role debe ser client o admin')
+            error.status = 400
+            return next(error)
+        }
+
+        const users = await getUsersByRole(role)
+
+        res.json({
+            success: true,
+            message: `Usuarios con rol ${role} obtenidos correctamente`,
+            data: users,
+            total: users.length
+        })
+
+    } catch (error) {
+
+        error.status = error.status || 500
+        error.message = error.message || 'Error al obtener usuarios por rol'
+        next(error)
     }
 }

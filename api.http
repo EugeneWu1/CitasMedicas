@@ -40,6 +40,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
  "confirm_password": "ErickMendez123#"
 }
 
+### Mostrar todos los usuarios
+GET http://localhost:3000/api/auth/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDcwOTUyNywiZXhwIjoxNzU0NzUyNzI3fQ.Rl0hI2NCjU7nKjpNKvSCC0jQKpXQXIxLu-bZSGVrcTo
+
+### Mostrar usuarios por rol
+GET http://localhost:3000/api/auth/users/role?role=client
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDcwOTUyNywiZXhwIjoxNzU0NzUyNzI3fQ.Rl0hI2NCjU7nKjpNKvSCC0jQKpXQXIxLu-bZSGVrcTo
+
+
+
 ###Servicios 
 
 ### Consulta de todos los servicios
