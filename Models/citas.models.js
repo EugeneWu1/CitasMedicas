@@ -1,7 +1,7 @@
 import pool from '../Config/db.js';
 
 //Funcion para listar todas las citas
-export const getAllAppointmentsFromUser = async (userId) => {
+export const getAllAppointmentsFromUser = async (id) => {
 
     const query = `SELECT a.appointment_id,
             a.user_id,

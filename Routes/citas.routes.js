@@ -13,7 +13,7 @@ import {
 const appointmentRouter = Router()
 
 //Consultar todas las citas del cliente
-appointmentRouter.get('/',verifyToken, getAll)
+appointmentRouter.get('/:id',verifyToken, getAll)
 
 //Crear una cita por el cliente 
 appointmentRouter.post('/',verifyToken,create)
