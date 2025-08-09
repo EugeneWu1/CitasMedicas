@@ -1,5 +1,14 @@
 import {validateServices, validateServiceUpdate, validateAvailability, validateServiceId} from '../Schemas/servicios.schema.js'
-import {getAllServicios,getServiciosPorDisponibilidad,cambiarDisponibilidad,insertServicio,updateServicio,deleteServicio} from '../Models/servicios.models.js'
+import {
+    getAllServicios,
+    getServiciosPorDisponibilidad,
+    cambiarDisponibilidad,
+    insertServicio,
+    updateServicio,
+    deleteServicio,
+    getServiceById,
+    checkServiceNameExists,
+} from '../Models/servicios.models.js'
 import {v4 as uuidv4} from 'uuid'
 
 //Muestra todos los servicios disponibles en la clinica
@@ -7,6 +16,11 @@ export const getAll = async (req,res,next) => {
     try {
         //Obtener los datos del modelo de base de datos
         const servicesDB = await getAllServicios()
+
+        // Verificar si no hay servicios
+        if (!servicesDB || servicesDB.length === 0) {
+            return res.status(204).send()
+        }
 
         //Si fue exitoso que muestre la informacion
         res.status(200).json({
@@ -28,6 +42,11 @@ export const availableService = async (req,res,next) => {
 
         //Obtenemos del modelo la informacion solicitada
         const results = await getServiciosPorDisponibilidad(disponible)
+
+        // Verificar si no hay servicios con esa disponibilidad
+        if (!results || results.length === 0) {
+            return res.status(204).send(); 
+        }
 
         //Si tuvo exito mostrar los datos
         res.status(200).json({
@@ -53,6 +72,15 @@ export const createService = async(req,res,next) => {
         const validationError = new Error(error.message);
         validationError.status = 400;
         return next(validationError); 
+    }
+
+    // Verificar que el nombre del servicio no exista
+    const nameExists = await checkServiceNameExists(safeData.name);
+    if (nameExists) {
+        return res.status(409).json({
+            success: false,
+            message: 'Ya existe un servicio con este nombre'
+        });
     }
 
     //Codificar el id
@@ -84,12 +112,22 @@ export const updateService = async (req,res,next) => {
     //Obtenemos el id del servicio que vamos a modificar
     const {id} = req.params
 
-    // Validar el ID
+    //Validar el ID
     const idValidation = validateServiceId(id);
     if (!idValidation.success) {
-        const validationError = new Error(idValidation.error.message);
+        const validationError = new Error('ID de servicio inválido');
         validationError.status = 400;
         return next(validationError);
+    }
+
+    //validar que el servicio existe
+    const serviceInfo = await getServiceById(id)
+
+    if (!serviceInfo) {
+        return res.status(404).json({
+            success: false,
+            message: 'El servicio no existe'
+        });
     }
 
     //Validamos con zod que el body cumpla con los requisitos esperados
@@ -97,13 +135,24 @@ export const updateService = async (req,res,next) => {
 
     //Si no cumple con los requisitos de zod lanzamos un mensaje de error
     if(!dataValidada.success){
-        const validationError = new Error('Datos inválidos.');
+        const validationError = new Error(dataValidada.error.message);
         validationError.status = 400;
         return next(validationError);
     }
 
     //Si la data es valida por zod guardarla en la nueva variable que se mandara a la base de datos
     const dataFiltrada = dataValidada.data
+
+    // Si se está actualizando el nombre, verificar que no exista otro servicio con ese nombre
+    if (dataFiltrada.name) {
+        const nameExists = await checkServiceNameExists(dataFiltrada.name, id);
+        if (nameExists) {
+            return res.status(409).json({
+                success: false,
+                message: 'Ya existe otro servicio con este nombre'
+            });
+        }
+    }
 
     try {
         //Utilizamos el modelo para actualizar informacion de un servicio y le pasamos dos parametros: id del servicio y la dataFiltrada por zod
@@ -129,9 +178,19 @@ export const changeAvailability = async (req,res,next) => {
     // Validar el ID
     const idValidation = validateServiceId(id);
     if (!idValidation.success) {
-        const validationError = new Error(idValidation.error.message);
+        const validationError = new Error('ID de servicio inválido');
         validationError.status = 400;
         return next(validationError);
+    }
+
+    //validar que el servicio existe
+    const serviceInfo = await getServiceById(id)
+
+    if (!serviceInfo) {
+        return res.status(404).json({
+            success: false,
+            message: 'El servicio no existe'
+        });
     }
 
     //Validamos con zod que el body cumpla con los requisitos esperados
@@ -146,30 +205,51 @@ export const changeAvailability = async (req,res,next) => {
     }
 
     //Del body desestructuramos la data que viene filtrada por zod
-    const {disponible} = validacion.data
+    const {available} = validacion.data
 
     try {
-    //Utilizamos el modelo para actualizar el estado del servicio, los cuales recibe dos parametros: id del servicio y el nuevo estado
-    const result = await cambiarDisponibilidad(id, disponible)
+        //Utilizamos el modelo para actualizar el estado del servicio, los cuales recibe dos parametros: id del servicio y el nuevo estado
+        const result = await cambiarDisponibilidad(id, available)
 
-    //Si los cambios fueron exitosos mostrar el campo actualizado
-    res.status(200).json({
-      success: true,
-      message: 'Disponibilidad actualizada correctamente',
-      data: result
-    })
-  } catch (error) {
-    //Si fallo mandamos un mensaje de error por parte del servidor
-    return next(error)
-  }
+        //Si los cambios fueron exitosos mostrar el campo actualizado
+        res.status(200).json({
+            success: true,
+            message: 'Disponibilidad actualizada correctamente',
+            data: {
+                service_id: id,
+                available: available
+            }
+        })
+    } catch (error) {
+        //Si fallo mandamos un mensaje de error por parte del servidor
+        return next(error)
+    }
 }
 
-//Funcion parra borrar un servicio 
+//Funcion para borrar un servicio
 export const deleteService = async (req,res,next) => {
     //Obtenemos el id del servicio a borrar
     const {id} = req.params
 
     try {
+
+        // Validar el ID
+        const idValidation = validateServiceId(id);
+        if (!idValidation.success) {
+            const validationError = new Error('ID de servicio inválido');
+            validationError.status = 400;
+            return next(validationError);
+        }
+
+        //validar que el servicio existe
+        const serviceInfo = await getServiceById(id)
+
+        if (!serviceInfo) {
+            return res.status(404).json({
+                success: false,
+                message: 'El servicio no existe'
+            });
+        }
 
         //Utilizamos el modelo para borrar el servicio que recibe como parametro el id del servicio
         const result = await deleteServicio(id)
@@ -178,7 +258,9 @@ export const deleteService = async (req,res,next) => {
         res.status(200).json({
             success: true,
             message: 'Servicio eliminado correctamente',
-            data: result
+            data:{
+                service_id: id
+            }
         })
         
     } catch (error) {

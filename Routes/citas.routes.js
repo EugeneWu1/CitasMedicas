@@ -7,7 +7,10 @@ import {
     create,
     remove,
     getAllScheduled,
-    update
+    update,
+    getAllCancelled,
+    getAllCompleted,
+    getAvailableSlots
 } from '../Controllers/citas.controller.js'
 
 const appointmentRouter = Router()
@@ -22,9 +25,17 @@ appointmentRouter.post('/',verifyToken,create)
 appointmentRouter.delete('/:id',verifyToken, remove)
 
 //Ver todas las citas agendadas por el cliente
-appointmentRouter.get('/admin', [verifyToken, isAdmin], getAllScheduled)
+appointmentRouter.get('/admin/scheduled', [verifyToken, isAdmin], getAllScheduled)
 
 //Actualizar cita por el cliente
 appointmentRouter.put('/:id',verifyToken, update)
+
+//Obtener todas las citas canceladas
+appointmentRouter.get('/admin/cancelled', [verifyToken, isAdmin], getAllCancelled)
+
+//Obtener todas las citas completadas
+appointmentRouter.get('/admin/completed', [verifyToken, isAdmin], getAllCompleted)
+
+appointmentRouter.get('/availableSlots', verifyToken, getAvailableSlots)
 
 export default appointmentRouter

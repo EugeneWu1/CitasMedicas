@@ -77,7 +77,7 @@ export const login = async(req, res,next) => {
     }
 }
 
-export const createClient = async (req, res,next) => {
+export const createUser = async (req, res,next) => {
     try {
         //const { name: nameReq, email: emailReq, phone: phoneReq, role: roleReq } = req.body
 
@@ -125,7 +125,17 @@ export const createClient = async (req, res,next) => {
             data: {id, name, email, phone}
         })
     } catch (error) {
-        console.error('Error en createClient:', error)
+        console.error('Error en createUser:', error)
+
+        // Manejar error de email duplicado
+        if (error.code === 'ER_DUP_ENTRY' && error.errno === 1062) {
+            if (error.sqlMessage.includes('email')) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'El email ya está registrado en el sistema'
+                });
+            }
+        }
         error.status = 400;
         error.message = 'Error al crear usuario';
         return next(error);
@@ -153,8 +163,8 @@ export const setPassword = async (req, res,next) => {
             return res.status(400).json(error)  // No necesitas "error.errors" si lo usa así tu profesor
         }
 
-// Aquí sí puedes desestructurar con seguridad porque ya validaste que success === true
-const {new_password, confirm_password } = safeData
+        // desestructurar con seguridad porque ya validado que success === true
+        const {new_password, confirm_password } = safeData
 
         //console.log('Token recibido:', token)
         //console.log('JWT_SECRET:', process.env.JWT_SECRET)
@@ -226,6 +236,10 @@ export const getUsers = async (req, res, next) => {
     try {
         const users = await getAllUsers()
 
+        if (!users || users.length === 0) {
+            return res.status(204).send()
+        }
+
         res.json({
             success: true,
             message: 'Usuarios obtenidos correctamente',
@@ -262,6 +276,11 @@ export const getByRole = async (req, res, next) => {
         }
 
         const users = await getUsersByRole(role)
+
+        // Verificar si no hay usuarios con ese rol
+        if (!users || users.length === 0) {
+            return res.status(204).send() // 204 No Content
+        }
 
         res.json({
             success: true,

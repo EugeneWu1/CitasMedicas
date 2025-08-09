@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import {
 
-    createClient,
+    createUser,
     login,
     setPassword,
     getUsers,
@@ -14,7 +14,7 @@ import {isAdmin} from '../middlewares/isAdmin.js'
 const userRouter = Router();
 
 //Rutas de Autenticacion
-userRouter.post('/register',createClient)
+userRouter.post('/register',createUser)
 userRouter.post('/login' ,login )
 userRouter.patch('/set-password',setPassword)
 userRouter.get('/users', [verifyToken, isAdmin], getUsers)

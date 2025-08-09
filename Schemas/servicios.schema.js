@@ -2,16 +2,16 @@ import { z } from 'zod'
 
 // Schema general
 const serviceSchema = z.object({
-  nombre: z.string().min(5).max(50),
-  descripcion: z.string().min(10).max(200),
-  duracion: z.number(),
-  precio: z.number(),
-  disponible: z.boolean()
+  name: z.string().min(5).max(50),
+  description: z.string().min(10).max(200),
+  duration: z.number().int('La duración debe ser un número entero').min(11, 'La duración debe ser mayor a 10 minutos'),
+  price: z.number().min(0, 'El precio debe ser un número positivo'),
+  available: z.boolean()
 }).strict()
 
 // Schema para validar cambios de estado
 const availabilitySchema = z.object({
-  disponible: z.boolean()
+  available: z.boolean()
 }).strict()
 
 // Para el update hay que habilitar campos opcionales

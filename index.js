@@ -34,7 +34,7 @@ app.use(cors({
     // configuración de los origenes permitidos
     origin: [
         'http://localhost:3000',
-        'http://127.0.0.1:5500',
+        'https://emewesdev.com/',
         'https://prod.server.com',
         'https://test.server.com'
     ],

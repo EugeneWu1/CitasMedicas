@@ -1,6 +1,6 @@
 export const isAdmin = (req, res, next) => {
 
-    const { role, id } = req.params
+    const { role, id } = req.user
 
     //validar en DDBB que el rol sea el mismo del token
 

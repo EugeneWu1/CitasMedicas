@@ -22,9 +22,10 @@ export const verifyToken = (req, res, next) => {
 
         const { role, id } = jwt.verify(token, process.env.JWT_SECRET)
 
-        req.params.role = role
-        req.params.id = id
-
+        req.user = {
+            id: id,
+            role: role
+        }
 
         next()
     } catch (error) {

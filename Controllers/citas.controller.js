@@ -1,3 +1,4 @@
+import e from 'cors';
 import {
     getAllAppointmentsFromUser,
     createAppointment,
@@ -5,13 +6,19 @@ import {
     getAllScheduledAppointments,
     updateAppointment,
     checkDuplicateAppointment,
-    checkTimeConflict,
+    checkServiceTimeConflict,
     getServiceInfo,
-    calculateEndTime
+    calculateEndTime,
+    checkUserExists,
+    getAppointmentById,
+    convertUserIdToUuid,
+    getAvailableTimeSlots,
+    getAllCancelledAppointments,
+    getAllCompletedAppointments
 } from '../Models/citas.models.js'
-import { cambiarDisponibilidad } from '../Models/servicios.models.js'
 import { validateAppointments, validateAppointmentUpdate, validateAppointmentId, validateUserId } from '../Schemas/citas.schema.js'
 import { v4 as uuidv4 } from 'uuid';
+
 
 //Consultar todas las citas del cliente
 export const getAll = async (req, res, next) => {
@@ -19,14 +26,29 @@ export const getAll = async (req, res, next) => {
         const { id } = req.params
        
         // Validar el ID
-        const idValidation = validateUserId(id);
+        const idValidation = validateUserId(id)
         if (!idValidation.success) {
-            const validationError = new Error('Datos inválidos.');
-            validationError.status = 400;
-            return next(validationError);
+            const validationError = new Error('ID de usuario inválido')
+            validationError.status = 400
+            return next(validationError)
+        }
+
+        // Verificar que el usuario existe
+        const userExists = await checkUserExists(id);
+        if (!userExists) {
+            return res.status(404).json({
+                success: false,
+                message: 'El usuario no existe'
+            });
         }
 
         const appointmentsDB = await getAllAppointmentsFromUser(id)
+
+        
+        // Verificar si el usuario no tiene citas
+        if (!appointmentsDB || appointmentsDB.length === 0) {
+            return res.status(204).send(); // 204 No Content
+        }
 
         res.status(200).json({
             success: true,
@@ -35,29 +57,37 @@ export const getAll = async (req, res, next) => {
 
     } catch (error) {
         // Manejo de errores
-        next(error)
+        return next(error)
     }
+
+    //TODO: PAGINACION
 }
 
-//Crear una cita por el cliente
+//Crear una cita 
 export const create = async (req, res, next) => {
     try {
-        // Validar los datos de entrada
-        const { success, data, error } = validateAppointments(req.body);
+        const data = req.body;
+
+        // Validar los datos con Zod
+        const { success, data: safeData, error } = validateAppointments(data);
         
         if (!success) {
-            return res.status(400).json({
+            const validationError = new Error(error.message);
+            validationError.status = 400;
+            return next(validationError);
+        }
+
+        // Verificar que el usuario existe
+        const userExists = await checkUserExists(safeData.user_id);
+        if (!userExists) {
+            return res.status(404).json({
                 success: false,
-                message: 'Datos de entrada inválidos',
-                errors: error.errors
+                message: 'El usuario no existe'
             });
         }
 
-        const { user_id, service_id, appointment_date, start_time } = data;
-
-        // 1. Verificar que el servicio existe y está disponible
-        const serviceInfo = await getServiceInfo(service_id);
-        
+        // Verificar que el servicio existe y está disponible
+        const serviceInfo = await getServiceInfo(safeData.service_id);
         if (!serviceInfo) {
             return res.status(404).json({
                 success: false,
@@ -72,74 +102,75 @@ export const create = async (req, res, next) => {
             });
         }
 
-        // 2. Calcular end_time basado en la duración del servicio
-        const calculatedEndTime = data.end_time || calculateEndTime(start_time, serviceInfo.duration);
+        // Verificar disponibilidad por horarios
+        // Calcular end_time si no se proporciona
+        if (!safeData.end_time && serviceInfo.duration) {
+            safeData.end_time = calculateEndTime(safeData.start_time, serviceInfo.duration);
+        }
 
-        // 3. Verificar que no existe una cita duplicada
-        const isDuplicate = await checkDuplicateAppointment(user_id, appointment_date, start_time);
-        
+        // Verificar que no haya conflictos de horario con CUALQUIER servicio
+        const hasTimeConflict = await checkServiceTimeConflict(
+            safeData.appointment_date, 
+            safeData.start_time, 
+            safeData.end_time
+        );
+
+        if (hasTimeConflict) {
+            return res.status(409).json({
+                success: false,
+                message: 'El horario no está disponible. Ya existe una cita programada en ese horario.'
+            });
+        }
+
+        // Verificar que el usuario no tenga otra cita en la misma fecha y hora
+        const isDuplicate = await checkDuplicateAppointment(
+            safeData.user_id, 
+            safeData.appointment_date, 
+            safeData.start_time
+        );
+
         if (isDuplicate) {
             return res.status(409).json({
                 success: false,
-                message: 'Ya existe una cita para este usuario en la misma fecha y hora'
+                message: 'Ya tiene una cita programada en esa fecha y hora'
             });
         }
 
-        // 4. Verificar conflictos de horario
-        const hasConflict = await checkTimeConflict(appointment_date, start_time, calculatedEndTime);
-        
-        if (hasConflict) {
-            return res.status(409).json({
-                success: false,
-                message: 'El horario solicitado no está disponible, hay conflicto con otra cita'
-            });
-        }
-
-        // 5. Crear la cita
+        // Generar ID y crear la cita
+        const appointmentId = uuidv4();
         const appointmentData = {
-            appointment_id: uuidv4(),
-            user_id,
-            service_id,
-            appointment_date,
-            start_time,
-            end_time: calculatedEndTime,
-            status: data.status || 'scheduled',
-            notes: data.notes || null
+            appointment_id: appointmentId,
+            ...safeData
         };
 
         const result = await createAppointment(appointmentData);
 
-        // 6. Cambiar disponibilidad del servicio a false (0)
-        await cambiarDisponibilidad(service_id, 0);
-
         res.status(201).json({
             success: true,
-            message: 'Cita creada exitosamente y servicio marcado como no disponible',
-            data: appointmentData
+            message: 'Cita creada exitosamente',
+            data: result
         });
 
     } catch (error) {
-        console.error('Error en create appointment:', error);
-        next(error);
+        console.error('Error en create:', error);
+        return next(error);
     }
 }
 
 //Borrar una cita por el cliente
 export const remove = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params
 
         // Validar el ID
-        const { success, error } = validateAppointmentId(id);
+        const { success } = validateAppointmentId(id)
         if (!success) {
-            return res.status(400).json({
-                success: false,
-                message: 'ID de cita inválido',
-                errors: error.errors
-            });
+            const validationError = new Error('ID de cita inválido')
+            validationError.status = 400
+            return next(validationError)
         }
 
-        const result = await deleteAppointment(id);
+        const result = await deleteAppointment(id)
 
         res.status(200).json({
             success: true,
@@ -148,7 +179,7 @@ export const remove = async (req, res, next) => {
         });
 
     } catch (error) {
-        next(error);
+        return next(error)
     }
 }
 
@@ -157,6 +188,11 @@ export const getAllScheduled = async (req, res, next) => {
     try {
         const appointmentsDB = await getAllScheduledAppointments()
 
+        // Verificar si no hay citas programadas
+        if (!appointmentsDB || appointmentsDB.length === 0) {
+            return res.status(204).send(); // 204 No Content
+        }
+
         res.status(200).json({
             success: true,
             data: appointmentsDB
@@ -164,141 +200,66 @@ export const getAllScheduled = async (req, res, next) => {
 
     } catch (error) {
 
-        next(error)
+        return next(error)
     }
 }
 
-//Actualizar cita por el cliente
+//Actualizar cita
 export const update = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        // Validar el ID
-        const idValidation = validateAppointmentId(id);
+        // validar el ID
+        const idValidation = validateAppointmentId(id)
         if (!idValidation.success) {
-            return res.status(400).json({
-                success: false,
-                message: 'ID de cita inválido',
-                errors: idValidation.error.errors
-            });
+            const validationError = new Error('ID de cita inválido')
+            validationError.status = 400
+            return next(validationError)
         }
 
-        // Validar los datos de entrada
-        const { success, data, error } = validateAppointmentUpdate(req.body);
+        // alidar los datos de entrada
+        const { success, data, error } = validateAppointmentUpdate(req.body)
         
         if (!success) {
-            return res.status(400).json({
-                success: false,
-                message: 'Datos de entrada inválidos',
-                errors: error.errors
-            });
+            const validationError = new Error(error.message);
+            validationError.status = 400;
+            return next(validationError); 
         }
 
         // Obtener información de la cita actual
-        const query = `SELECT * FROM appointment WHERE appointment_id = ?`;
-        const [existingResult] = await pool.query(query, [id]);
+        const existingAppointment = await getAppointmentById(id);
 
-        if (existingResult.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'La cita no existe'
-            });
+        if (!existingAppointment) {
+            const validationError = new Error('La cita no existe');
+            validationError.status = 404;
+            return next(validationError);
         }
 
-        const existingAppointment = existingResult[0];
-        const oldServiceId = existingAppointment.service_id;
-        const oldStatus = existingAppointment.status;
-
-        // Si se está cambiando el servicio, verificar que el nuevo servicio existe y está disponible
-        if (data.service_id && data.service_id !== oldServiceId) {
-            const newServiceInfo = await getServiceInfo(data.service_id);
+        // Recalcular end_time si es necesario
+        if ((data.start_time || data.service_id) && !data.end_time) {
+            const currentServiceId = data.service_id || existingAppointment.service_id;
+            const serviceInfo = await getServiceInfo(currentServiceId);
             
-            if (!newServiceInfo) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'El nuevo servicio no existe'
-                });
+            if (serviceInfo && serviceInfo.duration) {
+                const currentStartTime = data.start_time || existingAppointment.start_time;
+                data.end_time = calculateEndTime(currentStartTime, serviceInfo.duration);
             }
-
-            if (!newServiceInfo.available) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'El nuevo servicio no está disponible'
-                });
-            }
-
-            // Cambiar disponibilidad: nuevo servicio a no disponible, anterior a disponible
-            await cambiarDisponibilidad(data.service_id, 0);
-            await cambiarDisponibilidad(oldServiceId, 1);
         }
-
-        // Si se está actualizando fecha/hora, verificar duplicados y conflictos
-        if (data.appointment_date || data.start_time) {
+        
+        //  Verificar conflictos de horario
+        if (data.appointment_date || data.start_time || data.end_time) {
             const newDate = data.appointment_date || existingAppointment.appointment_date;
             const newStartTime = data.start_time || existingAppointment.start_time;
-            const newUserId = existingAppointment.user_id;
-
-            // Convertir user_id de binary a UUID para la verificación
-            const userIdQuery = `SELECT BIN_TO_UUID(?) as user_uuid`;
-            const [userIdResult] = await pool.query(userIdQuery, [newUserId]);
-            const userUuid = userIdResult[0].user_uuid;
-
-            // Verificar duplicados (excluyendo la cita actual)
-            const isDuplicate = await checkDuplicateAppointment(userUuid, newDate, newStartTime, id);
-            
-            if (isDuplicate) {
-                // Revertir cambios de disponibilidad si hubo error
-                if (data.service_id && data.service_id !== oldServiceId) {
-                    await cambiarDisponibilidad(data.service_id, 1);
-                    await cambiarDisponibilidad(oldServiceId, 0);
-                }
-                
-                return res.status(409).json({
-                    success: false,
-                    message: 'Ya existe una cita para este usuario en la misma fecha y hora'
-                });
-            }
-
-            // Verificar conflictos de horario
             const newEndTime = data.end_time || existingAppointment.end_time;
-            const hasConflict = await checkTimeConflict(newDate, newStartTime, newEndTime, id);
+
+            // Verificar conflictos de horario (excluyendo la cita actual)
+            const hasConflict = await checkServiceTimeConflict(newDate, newStartTime, newEndTime, id);
             
             if (hasConflict) {
-                // Revertir cambios de disponibilidad si hubo error
-                if (data.service_id && data.service_id !== oldServiceId) {
-                    await cambiarDisponibilidad(data.service_id, 1);
-                    await cambiarDisponibilidad(oldServiceId, 0);
-                }
-                
                 return res.status(409).json({
                     success: false,
                     message: 'El horario solicitado no está disponible, hay conflicto con otra cita'
                 });
-            }
-        }
-
-        // Si se está cambiando el estado de la cita
-        if (data.status && data.status !== oldStatus) {
-            const newStatus = data.status;
-            const currentServiceId = data.service_id || oldServiceId;
-
-            // Si la cita cambia de 'scheduled' a 'completed' o 'cancelled', liberar el servicio
-            if (oldStatus === 'scheduled' && (newStatus === 'completed' || newStatus === 'cancelled')) {
-                await cambiarDisponibilidad(currentServiceId, 1);
-            }
-            // Si la cita cambia de 'completed' o 'cancelled' a 'scheduled', reservar el servicio
-            else if ((oldStatus === 'completed' || oldStatus === 'cancelled') && newStatus === 'scheduled') {
-                // Verificar que el servicio esté disponible antes de reservarlo
-                const serviceInfo = await getServiceInfo(currentServiceId);
-                
-                if (!serviceInfo.available) {
-                    return res.status(400).json({
-                        success: false,
-                        message: 'No se puede programar la cita, el servicio no está disponible'
-                    });
-                }
-                
-                await cambiarDisponibilidad(currentServiceId, 0);
             }
         }
 
@@ -312,7 +273,103 @@ export const update = async (req, res, next) => {
         });
 
     } catch (error) {
-        console.error('Error en update appointment:', error);
-        next(error);
+        return next(error);
+    }
+}
+
+
+// Obtener todas las citas canceladas
+export const getAllCancelled = async (req, res, next) => {
+    try {
+
+        const appointmentsDB = await getAllCancelledAppointments()
+
+        // Verificar si no hay citas canceladas
+        if (!appointmentsDB || appointmentsDB.length === 0) {
+            return res.status(204).send(); // 204 No Content
+        }
+
+        res.status(200).json({
+            success: true,
+            data: appointmentsDB
+        })
+
+    } catch (error) {
+
+        return next(error)
+    }
+}
+
+//Obtener todas las citas completadas
+export const getAllCompleted = async (req, res, next) => {
+    try {
+        const appointmentsDB = await getAllCompletedAppointments();
+
+        // Verificar si no hay citas completadas
+        if (!appointmentsDB || appointmentsDB.length === 0) {
+            return res.status(204).send(); // 204 No Content
+        }
+
+        res.status(200).json({
+            success: true,
+            data: appointmentsDB
+        })
+
+    } catch (error) {
+
+        return next(error)
+    } 
+}
+
+
+//Obtener horarios disponibles para un servicio en una fecha específica
+export const getAvailableSlots = async (req, res, next) => {
+    try {
+        const { service_id, date } = req.query;
+
+        if (!service_id || !date) {
+            return res.status(400).json({
+                success: false,
+                message: 'service_id y date son requeridos'
+            });
+        }
+
+        // Validar que el servicio existe
+        const serviceInfo = await getServiceInfo(service_id);
+        if (!serviceInfo) {
+            return res.status(404).json({
+                success: false,
+                message: 'El servicio no existe'
+            });
+        }
+
+        if (!serviceInfo.available) {
+            return res.status(400).json({
+                success: false,
+                message: 'El servicio no está disponible'
+            });
+        }
+
+        // Obtener horarios disponibles
+        const availableSlots = await getAvailableTimeSlots(date, service_id);
+
+        if (availableSlots.length === 0) {
+            return res.status(204).send();
+        }
+
+        res.status(200).json({
+            success: true,
+            date: date,
+            service: {
+                id: service_id,
+                name: serviceInfo.name,
+                duration: serviceInfo.duration
+            },
+            available_slots: availableSlots
+        });
+
+    } catch (error) {
+        console.error('Error en getAvailableSlots:', error);
+        return next(error);
     }
 }

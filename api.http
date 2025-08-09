@@ -1,4 +1,4 @@
-###Autenticacion 
+###Autenticacion################################################ 
 
 ###Registro de Usuario
 POST http://localhost:3000/api/auth/register
@@ -20,7 +20,7 @@ Content-Type: application/json
   "password":"ErickMendez123#"
 }
 
-###Registro de Usuario
+###Inicio de Sesión2
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
@@ -40,17 +40,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
  "confirm_password": "ErickMendez123#"
 }
 
-### Mostrar todos los usuarios
+### Mostrar todos los usuarios, primer token de admin, segundo de cliente
 GET http://localhost:3000/api/auth/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDcwOTUyNywiZXhwIjoxNzU0NzUyNzI3fQ.Rl0hI2NCjU7nKjpNKvSCC0jQKpXQXIxLu-bZSGVrcTo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
 
 ### Mostrar usuarios por rol
 GET http://localhost:3000/api/auth/users/role?role=client
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDcwOTUyNywiZXhwIjoxNzU0NzUyNzI3fQ.Rl0hI2NCjU7nKjpNKvSCC0jQKpXQXIxLu-bZSGVrcTo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
 
 
 
-###Servicios 
+######################################Servicios################################################ 
 
 ### Consulta de todos los servicios
 GET http://localhost:3000/api/servicios
@@ -61,52 +62,116 @@ GET http://localhost:3000/api/servicios/disponibilidad?available=true
 ### Crear un servicio
 POST http://localhost:3000/api/servicios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ2NDI1MjEsImV4cCI6MTc1NDY4NTcyMX0.3W_MhwiWbiA4oq-vHTNfC1f4BIoyLTjo0Wx27kKZMpw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
 
 {
-  "nombre": "Consulta General",
-  "descripcion": "Servicio de consulta medica general",
-  "duracion": 30,
-  "precio": 500.00,
-  "disponible": true
+  "name": "Consulta General",
+  "description": "Servicio de consulta medica general",
+  "duration": 30,
+  "price": 500.00,
+  "available": true
 }
 
 ### Crear un servicio
 POST http://localhost:3000/api/servicios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
 
 {
-  "nombre": "Cirugía",
-  "descripcion": "Servicio de cirugía general",
-  "duracion": 120,
-  "precio": 15000.00,
-  "disponible": true
+  "name": "Consulta Pediátrica",
+  "description": "Evaluación médica especializada para niños",
+  "duration": 40,
+  "price": 700.00,
+  "available": true
 }
 
+
 ### Actualizar un servicio
-PUT http://localhost:3000/api/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0
+PUT http://localhost:3000/api/servicios/3fc60f19-7e09-4255-8804-4f2f0967259a
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
 
 {
-  "nombre": "Consulta General Actualizada",
-  "descripcion": "Servicio actualizado",
-  "duracion": 30,
-  "precio": 400.00,
-  "disponible": true
+  "name": "Examen de Laboratorio",
+  "description": "Análisis de sangre y orina con interpretación médica",
+  "duration": 20,
+  "price": 1200.00,
+  "available": true
 }
 
 ### Actualizar disponibilidad
 
-PUT http://localhost:3000/api/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0/disponibilidad
+PUT http://localhost:3000/api/servicios/db4c169c-31a0-446b-8fc0-3e49732c8a07/disponibilidad
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
 
 {
-  "disponible": false
+  "available": true
 }
 
 ### Eliminar un servicio
-DELETE http://localhost:3000/api/servicios/c8fd3bdd-a690-4a9c-90ae-671563cd84d0
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDY0MTk5MCwiZXhwIjoxNzU0Njg1MTkwfQ.LCCkE2_gb-LTpVZWxofxNcskUG1J-TZU7zMPvZFVZmA
+DELETE http://localhost:3000/api/servicios/614bb6a9-59f0-410e-a373-754f847123a0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+
+
+
+
+
+
+######################## Citas ################################################ 
+
+### Obtener todas las citas por usuario (cliente)
+GET http://localhost:3000/api/citas/13891c48-358f-47e0-974c-d79559bf0fd9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+
+### Crear una cita (cliente)
+POST http://localhost:3000/api/citas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+
+{
+  "user_id": "13891c48-358f-47e0-974c-d79559bf0fd9",
+  "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
+  "appointment_date": "2025-08-15",
+  "start_time": "09:30:00",
+  "notes": "Primera consulta"
+}
+
+### Crear otra cita (cliente)
+POST http://localhost:3000/api/citas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+
+{
+  "user_id": "13891c48-358f-47e0-974c-d79559bf0fd9",
+  "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
+  "appointment_date": "2025-08-16",
+  "start_time": "14:00:00",
+  "end_time": "14:30:00",
+  "status": "scheduled",
+  "notes": "Consulta de seguimiento"
+}
+
+### Actualizar una cita (cliente)
+PUT http://localhost:3000/api/citas/4060428a-0e2f-4ae3-8de1-e67992d7ac39
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+
+{
+  "user_id": "13891c48-358f-47e0-974c-d79559bf0fd9",
+  "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
+  "appointment_date": "2025-09-16",
+  "start_time": "11:00:00",
+  "notes": "Cambio de fecha solicitado por el paciente"
+}
+
+### Actualizar estado de una cita (cambiar a completado)
+PUT http://localhost:3000/api/citas/4060428a-0e2f-4ae3-8de1-e67992d7ac39
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+
+{
+  "status": "completed",
+  "notes": "Consulta realizada exitosamente"
+}
+
