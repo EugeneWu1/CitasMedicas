@@ -42,26 +42,34 @@ npm install zod cors mysql2 dotenv jsonwebtoken
 
 ## 🧾 **Instrucciones de Instalación y Ejecución**
 
-1. **Clonar el repositorio**
+1. **Clone el repositorio**
+
 ```bash
    git clone https://github.com/EugeneWu1/CitasMedicas.git
    cd CitasMedicas
 ```
-2. **Abrir el repositorio**
-En tu editor de código de preferencia abre el proyecto desde su ubicación. En VSCode ejecuta:
+
+2. **Abra el repositorio**
+  En su editor de código de preferencia abra el proyecto desde su ubicación. En VSCode ejecuta:
 
 ```bash
    code .
 ```
+
 3. **Instalar Node.js**  
+
   Descarga e instala Node.js desde [nodejs.org](https://nodejs.org/).
 
 3. **Instalar las dependencias**
+
   ```bash
   npm install
   ```
+
 4. **Ejecutar la API**
-Para ejecutar la API desde tu terminal ejecuta:
+
+  Para ejecutar la API desde tu terminal ejecuta:
+
   ```bash
   npm run dev
   ```
