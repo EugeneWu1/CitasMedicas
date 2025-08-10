@@ -41,7 +41,7 @@ app.use(cors({
     origin: [
         'http://localhost:3000',
         'http://localhost:4200',
-        'https://emewesdev.com/',
+        'https://emewesdev-clinic.onrender.com',
         'https://prod.server.com',
         'https://test.server.com'
     ],

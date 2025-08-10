@@ -31,11 +31,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:3000/api',
-      description: '🖥️ Servidor Local de Desarrollo',
-    },
-    {
-      url: 'https://api.citasmedicas.com/api',
+      url: 'https://emewesdev-clinic.onrender.com/api',
       description: '🌐 Servidor de Producción',
     },
   ],

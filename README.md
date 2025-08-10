@@ -151,7 +151,7 @@ CitasMedicas/
 
 5. **Probar la api desplegada**
    
-  Ejecute la api desplegada en render desde: [https://localhost:3000](http://localhost:3000)
+  Ejecute la api desplegada en render desde: [https://emewesdev-clinic.onrender.com/api/](https://emewesdev-clinic.onrender.com/api/)
 
 
 ---
@@ -162,11 +162,8 @@ CitasMedicas/
 ### Swagger UI
 La documentación interactiva de la API está disponible en:
 
-- Entorno local
-👉 [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
-
 - Entorno de producción
-👉 [https://localhost:3000/api-docs](https://localhost:3000/api-docs)
+👉 [https://emewesdev-clinic.onrender.com/api-docs](https://emewesdev-clinic.onrender.com/api-docs)
 
 
 Puede explorar y probar distintos escenarios para los endpoints directamente desde esa interfaz.
