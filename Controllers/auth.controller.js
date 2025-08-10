@@ -168,7 +168,7 @@ export const setPassword = async (req, res,next) => {
         const { success, error, data: safeData } = authSchemaUpdateData(data)
 
         if (!success) {
-            return res.status(400).json(error)  // No necesitas "error.errors" si lo usa así tu profesor
+            return res.status(400).json(error) 
         }
 
         // desestructurar con seguridad porque ya validado que success === true

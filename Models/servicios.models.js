@@ -119,9 +119,7 @@ export const updateServicio = async(id,services) => {
 
       //Retornamos un objeto con la informacion con los campos del servicio 
       return {
-         success: true,
-         message: 'Servicio actualizado correctamente',
-         data: services,
+         services,
          affectedRows: result.affectedRows
       }
 

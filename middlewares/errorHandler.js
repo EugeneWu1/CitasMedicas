@@ -40,7 +40,7 @@ export default function errorHandler(err, req, res, next) {
     message = 'Error en la estructura de la consulta';
   }
 
-  if (err.code === 'ECONNREFUSED') {
+  if (err.code === 'ENOTFOUND') {
     statusCode = 503;
     message = 'No se puede conectar a la base de datos';
   }

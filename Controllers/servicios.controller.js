@@ -161,6 +161,7 @@ export const updateService = async (req,res,next) => {
         //Si la operacion fue exitosa mostrar la data actualizada
         res.status(200).json({
             success: true,
+            message: 'Servicio actualizado correctamente',
             data: result
         })
 

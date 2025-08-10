@@ -42,12 +42,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 ### Mostrar todos los usuarios, primer token de admin, segundo de cliente
 GET http://localhost:3000/api/auth/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 //Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
 
 ### Mostrar usuarios por rol
 GET http://localhost:3000/api/auth/users/role?role=client
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 
 
@@ -62,10 +62,10 @@ GET http://localhost:3000/api/servicios/disponibilidad?available=true
 ### Crear un servicio
 POST http://localhost:3000/api/servicios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 {
-  "name": "Consulta General",
+  "name": "Consulta Cardiaca",
   "description": "Servicio de consulta medica general",
   "duration": 30,
   "price": 500.00,
@@ -75,7 +75,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 ### Crear un servicio
 POST http://localhost:3000/api/servicios
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 {
   "name": "Consulta Pediátrica",
@@ -87,15 +87,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 
 ### Actualizar un servicio
-PUT http://localhost:3000/api/servicios/3fc60f19-7e09-4255-8804-4f2f0967259a
+PUT http://localhost:3000/api/servicios/8e69dfa9-ce1d-486b-a1e5-1dbe32a40b5d
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 {
-  "name": "Examen de Laboratorio",
-  "description": "Análisis de sangre y orina con interpretación médica",
-  "duration": 20,
-  "price": 1200.00,
+  "name": "Consulta Cardiotoracica 2 ",
+  "description": "Servicio de consulta medica general",
+  "duration": 30,
+  "price": 500,
   "available": true
 }
 
@@ -103,15 +103,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 PUT http://localhost:3000/api/servicios/db4c169c-31a0-446b-8fc0-3e49732c8a07/disponibilidad
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 {
   "available": true
 }
 
 ### Eliminar un servicio
-DELETE http://localhost:3000/api/servicios/614bb6a9-59f0-410e-a373-754f847123a0
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+DELETE http://localhost:3000/api/servicios/edf01332-32e1-42c4-ae13-b2faced3d244
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 
 
@@ -122,7 +122,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 ### Obtener todas las citas por usuario (cliente) - Sin paginación
 GET http://localhost:3000/api/citas/0949fb0f-1b68-4069-ad98-e4a7de6636f9
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Obtener todas las citas por usuario (cliente) - Con paginación (página 1, 5 elementos)
 GET http://localhost:3000/api/citas/0949fb0f-1b68-4069-ad98-e4a7de6636f9?page=1&limit=5
@@ -134,7 +134,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4L
 
 ### Obtener todas las citas programadas - Sin paginación
 GET http://localhost:3000/api/citas/admin/scheduled
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Obtener todas las citas programadas - Con paginación (página 1, 20 elementos)
 GET http://localhost:3000/api/citas/admin/scheduled?page=1&limit=20
@@ -267,31 +267,42 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4L
 }
 
 
-
 #### Borrar una cita
 DELETE http://localhost:3000/api/citas/1765488c-950a-4aa8-9af9-619651177459
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+
+### Ver la disponibilidad de horarios con parámetros específicos
+GET http://localhost:3000/api/citas/availableSlots?service_id=db4c169c-31a0-446b-8fc0-3e49732c8a07&date=2025-08-16
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
+
+### Disponibilidad para servicio específico sin fecha
+GET http://localhost:3000/api/citas/availableSlots?service_id=db4c169c-31a0-446b-8fc0-3e49732c8a07
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
+
+### Disponibilidad para fecha específica sin servicio
+GET http://localhost:3000/api/citas/availableSlots?date=2025-08-16
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 
 ###Notificaciones################################################ 
 
 ### Obtener notificaciones del usuario (con paginación)
 GET http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b?page=1&limit=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Obtener solo notificaciones no leídas
 GET http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b?is_read=false&page=1&limit=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Obtener conteo de notificaciones no leídas
 GET http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/unread-count
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Crear nueva notificación
 POST http://localhost:3000/api/notificaciones/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 {
   "user_id": "25d23db5-92a8-4b4b-aca8-3db01a06041b",
@@ -316,13 +327,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 }
 
 ### Marcar notificación como leída
-PUT http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/123e4567-e89b-12d3-a456-426614174001/read
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+PUT http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/d6423d78-755f-11f0-9480-02af326b9ff1/read
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Marcar todas las notificaciones como leídas
 PUT http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/mark-all-read
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Eliminar notificación específica
 DELETE http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/123e4567-e89b-12d3-a456-426614174001
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM

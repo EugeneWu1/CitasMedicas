@@ -1,4 +1,5 @@
 import express from 'express'
+import setupSwagger from './swagger.js';
 import userRouter from './Routes/auth.routes.js';
 import serviceRouter from './Routes/servicios.routes.js'
 import appointmentRouter from './Routes/citas.routes.js';
@@ -50,6 +51,9 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Bearer', 'api-key']
 }))
 
+
+// Integrar Swagger UI en /api-docs
+setupSwagger(app);
 
 //Router principal
 const apiRouter = express.Router()
