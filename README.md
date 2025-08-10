@@ -86,30 +86,30 @@ CitasMedicas/
 ## 👤 **Funcionalidades por Rol**
 
 ### 🔵 **Cliente (client)**
-- ✅ Registrarse en el sistema
-- ✅ Iniciar sesión
-- ✅ Cambiar contraseña
-- ✅ Ver servicios disponibles
-- ✅ Crear citas médicas
-- ✅ Ver sus propias citas
-- ✅ Actualizar sus citas
-- ✅ Cancelar sus citas
-- ✅ Consultar horarios disponibles
-- ✅ Ver sus notificaciones
-- ✅ Marcar notificaciones como leídas
+- ✔ Registrarse en el sistema
+- ✔ Iniciar sesión
+- ✔ Cambiar contraseña
+- ✔ Ver servicios disponibles
+- ✔ Crear citas médicas
+- ✔ Ver sus propias citas
+- ✔ Actualizar sus citas
+- ✔ Cancelar sus citas
+- ✔ Consultar horarios disponibles
+- ✔ Ver sus notificaciones
+- ✔ Marcar notificaciones como leídas
 
 ### 🔴 **Administrador (admin)**
-- ✅ **Todas las funciones de cliente** +
-- ✅ Ver todos los usuarios del sistema
-- ✅ Filtrar usuarios por rol
-- ✅ Crear servicios médicos
-- ✅ Actualizar servicios médicos
-- ✅ Cambiar disponibilidad de servicios
-- ✅ Eliminar servicios médicos
-- ✅ Ver todas las citas (programadas, canceladas, completadas)
-- ✅ Eliminar cualquier cita
-- ✅ Crear notificaciones para usuarios
-- ✅ Gestión completa del sistema
+- ✔ **Todas las funciones de cliente** +
+- ✔ Ver todos los usuarios del sistema
+- ✔ Filtrar usuarios por rol
+- ✔ Crear servicios médicos
+- ✔ Actualizar servicios médicos
+- ✔ Cambiar disponibilidad de servicios
+- ✔ Eliminar servicios médicos
+- ✔ Ver todas las citas (programadas, canceladas, completadas)
+- ✔ Eliminar cualquier cita
+- ✔ Crear notificaciones para usuarios
+- ✔ Gestión completa del sistema
 
 ---
 
@@ -124,7 +124,7 @@ CitasMedicas/
 
 2. **Abra el repositorio**
 
-  En su editor de código de preferencia abra el proyecto desde su ubicación. En VSCode ejecuta:
+  En su editor de código de preferencia abra el proyecto desde su ubicación. En VSCode ejecute:
 
 ```bash
    code .
@@ -132,7 +132,7 @@ CitasMedicas/
 
 3. **Instalar Node.js**  
 
-  Descarga e instala Node.js desde [nodejs.org](https://nodejs.org/).
+  Descargue e instale Node.js desde [nodejs.org](https://nodejs.org/).
 
 3. **Instalar las dependencias**
 
@@ -142,7 +142,7 @@ CitasMedicas/
 
 4. **Ejecutar la API**
 
-  Para ejecutar la API desde su terminal ejecuta:
+  Para ejecutar la API desde su terminal ejecute:
 
   ```bash
   npm run dev
@@ -151,7 +151,7 @@ CitasMedicas/
 
 5. **Probar la api desplegada**
    
-  Ejecutar la api desplegada en render: [https://localhost:3000]
+  Ejecute la api desplegada en render desde: [https://localhost:3000]
 
 
 ---
