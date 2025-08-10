@@ -1,4 +1,4 @@
-###Autenticacion################################################ 
+################  Autenticacion   ################################################ 
 
 ###Registro de Usuario
 POST http://localhost:3000/api/auth/register
@@ -51,7 +51,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 
 
-######################################Servicios################################################ 
+
+
+
+######################################     Servicios        ################################################ 
 
 ### Consulta de todos los servicios
 GET http://localhost:3000/api/servicios
@@ -118,7 +121,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 
 
-######################## Citas ################################################ 
+###################################  Citas ################################################ 
 
 ### Obtener todas las citas por usuario (cliente) - Sin paginación
 GET http://localhost:3000/api/citas/0949fb0f-1b68-4069-ad98-e4a7de6636f9
@@ -285,19 +288,16 @@ GET http://localhost:3000/api/citas/availableSlots?date=2025-08-16
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 
-###Notificaciones################################################ 
+
+
+
+
+###########################   Notificaciones  ################################################ 
 
 ### Obtener notificaciones del usuario (con paginación)
 GET http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b?page=1&limit=10
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
-### Obtener solo notificaciones no leídas
-GET http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b?is_read=false&page=1&limit=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
-
-### Obtener conteo de notificaciones no leídas
-GET http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/unread-count
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Crear nueva notificación
 POST http://localhost:3000/api/notificaciones/
@@ -328,10 +328,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 ### Marcar notificación como leída
 PUT http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/d6423d78-755f-11f0-9480-02af326b9ff1/read
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
-
-### Marcar todas las notificaciones como leídas
-PUT http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/mark-all-read
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Eliminar notificación específica

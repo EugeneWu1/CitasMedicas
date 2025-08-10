@@ -2,9 +2,7 @@ import {
     getUserNotifications,
     createNotification,
     markAsRead,
-    markAllAsRead,
     deleteNotification,
-    getUnreadCount,
     checkUserExists
 } from '../Models/notificaciones.models.js';
 import {
@@ -144,33 +142,6 @@ export const markNotificationAsRead = async (req, res, next) => {
     }
 };
 
-// Marcar todas las notificaciones como leídas
-export const markAllNotificationsAsRead = async (req, res, next) => {
-    try {
-        const { userId } = req.params;
-
-        // Validar userId
-        const userIdValidation = validateUserId(userId);
-        if (!userIdValidation.success) {
-            const error = new Error('ID de usuario inválido');
-            error.status = 400;
-            return next(error);
-        }
-
-        const updatedCount = await markAllAsRead(userId);
-
-        res.status(200).json({
-            success: true,
-            message: `${updatedCount} notificaciones marcadas como leídas`,
-            data: { updated_count: updatedCount }
-        });
-
-    } catch (error) {
-        console.error('Error al marcar todas las notificaciones como leídas:', error);
-        error.status = error.status || 500;
-        next(error);
-    }
-};
 
 // Eliminar notificación
 export const removeNotification = async (req, res, next) => {
@@ -207,38 +178,3 @@ export const removeNotification = async (req, res, next) => {
     }
 };
 
-// Obtener conteo de notificaciones no leídas
-export const getUnreadNotificationsCount = async (req, res, next) => {
-    try {
-        const { userId } = req.params;
-
-        // Validar userId
-        const userIdValidation = validateUserId(userId);
-        if (!userIdValidation.success) {
-            const error = new Error('ID de usuario inválido');
-            error.status = 400;
-            return next(error);
-        }
-
-        // Verificar si el usuario existe
-        const userExists = await checkUserExists(userId);
-        if (!userExists) {
-            const error = new Error('Usuario no encontrado');
-            error.status = 404;
-            return next(error);
-        }
-
-        const count = await getUnreadCount(userId);
-
-        res.status(200).json({
-            success: true,
-            message: 'Conteo obtenido exitosamente',
-            data: { unread_count: count }
-        });
-
-    } catch (error) {
-        console.error('Error al obtener conteo de notificaciones no leídas:', error);
-        error.status = error.status || 500;
-        next(error);
-    }
-};

@@ -238,7 +238,6 @@ export const setPassword = async (req, res,next) => {
     }
 }
 
-
 // Controlador para obtener todos los usuarios
 export const getUsers = async (req, res, next) => {
     try {
@@ -260,9 +259,6 @@ export const getUsers = async (req, res, next) => {
         next(error)
     }
 }
-
-
-
 
 // Controlador para obtener usuarios por rol
 export const getByRole = async (req, res, next) => {

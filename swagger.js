@@ -205,9 +205,10 @@ const swaggerUiOptions = {
     docExpansion: 'list',
     showExtensions: true,
     showCommonExtensions: true,
+    tryItOutEnabled: true,
     defaultModelRendering: 'model',
-    defaultModelsExpandDepth: 2,
-    defaultModelExpandDepth: 2,
+    defaultModelsExpandDepth: -1,
+    defaultModelExpandDepth: 1,
   }
 };
 

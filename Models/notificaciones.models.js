@@ -107,17 +107,6 @@ export const markAsRead = async (notificationId, userId) => {
     return result.affectedRows > 0;
 };
 
-// Marcar todas las notificaciones de un usuario como leídas
-export const markAllAsRead = async (userId) => {
-    const query = `
-        UPDATE notification 
-        SET is_read = 1, updated_at = CURRENT_TIMESTAMP 
-        WHERE user_id = UUID_TO_BIN(?) AND is_read = 0
-    `;
-    
-    const [result] = await pool.query(query, [userId]);
-    return result.affectedRows;
-};
 
 // Eliminar notificación
 export const deleteNotification = async (notificationId, userId) => {
@@ -130,17 +119,6 @@ export const deleteNotification = async (notificationId, userId) => {
     return result.affectedRows > 0;
 };
 
-// Obtener conteo de notificaciones no leídas
-export const getUnreadCount = async (userId) => {
-    const query = `
-        SELECT COUNT(*) as count 
-        FROM notification 
-        WHERE user_id = UUID_TO_BIN(?) AND is_read = 0
-    `;
-    
-    const [result] = await pool.query(query, [userId]);
-    return result[0].count;
-};
 
 // Verificar si el usuario existe
 export const checkUserExists = async (userId) => {

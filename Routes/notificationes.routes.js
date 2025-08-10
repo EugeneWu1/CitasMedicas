@@ -1,4 +1,13 @@
 import { Router } from 'express';
+import { verifyToken } from '../middlewares/isAuth.js';
+import {
+    getNotifications,
+    createNewNotification,
+    markNotificationAsRead,
+    removeNotification,
+} from '../Controllers/notificaciones.controller.js';
+
+const notificationRouter = Router();
 
 /**
  * @swagger
@@ -6,67 +15,6 @@ import { Router } from 'express';
  *   name: Notificaciones
  *   description: Endpoints para gestión de notificaciones de usuario
  */
-import { verifyToken } from '../middlewares/isAuth.js';
-import {
-    getNotifications,
-    createNewNotification,
-    markNotificationAsRead,
-    markAllNotificationsAsRead,
-    removeNotification,
-    getUnreadNotificationsCount
-} from '../Controllers/notificaciones.controller.js';
-
-const notificationRouter = Router();
-
-/**
- * @swagger
- * /notificaciones/{userId}/unread-count:
- *   get:
- *     summary: Obtener conteo de notificaciones no leídas
- *     tags: [Notificaciones]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario
- *         example: "25d23db5-92a8-4b4b-aca8-3db01a06041b"
- *     responses:
- *       200:
- *         description: Conteo de notificaciones no leídas
- *       401:
- *         description: Token inválido
- */
-// Obtener conteo de notificaciones no leídas - DEBE IR ANTES DE /:userId
-notificationRouter.get('/:userId/unread-count', verifyToken, getUnreadNotificationsCount);
-
-/**
- * @swagger
- * /notificaciones/{userId}/mark-all-read:
- *   put:
- *     summary: Marcar todas las notificaciones como leídas
- *     tags: [Notificaciones]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario
- *         example: "25d23db5-92a8-4b4b-aca8-3db01a06041b"
- *     responses:
- *       200:
- *         description: Todas las notificaciones marcadas como leídas
- *       401:
- *         description: Token inválido
- */
-// Marcar todas las notificaciones como leídas - DEBE IR ANTES DE /:userId
-notificationRouter.put('/:userId/mark-all-read', verifyToken, markAllNotificationsAsRead);
 
 /**
  * @swagger
