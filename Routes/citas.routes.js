@@ -174,11 +174,6 @@ appointmentRouter.get('/', verifyToken, getAll)
  *                 format: time
  *                 description: Hora de inicio (HH:MM:SS)
  *                 example: "09:30:00"
- *               end_time:
- *                 type: string
- *                 format: time
- *                 description: Hora de fin (opcional, se calcula automáticamente)
- *                 example: "10:00:00"
  *               notes:
  *                 type: string
  *                 maxLength: 1000

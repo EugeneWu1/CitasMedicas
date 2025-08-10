@@ -167,11 +167,17 @@ export const create = async (req, res, next) => {
             });
         }
 
-        // Verificar disponibilidad por horarios
-        // Calcular end_time si no se proporciona
-        if (!safeData.end_time && serviceInfo.duration) {
-            safeData.end_time = calculateEndTime(safeData.start_time, serviceInfo.duration);
+        // Verificar que el servicio tenga duración definida
+        if (!serviceInfo.duration || serviceInfo.duration <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'El servicio no tiene una duración válida configurada'
+            });
         }
+
+        // SIEMPRE calcular end_time basado en la duración del servicio
+        // Esto garantiza que las validaciones de conflicto funcionen correctamente
+        safeData.end_time = calculateEndTime(safeData.start_time, serviceInfo.duration);
 
         // Verificar que no haya conflictos de horario con CUALQUIER servicio
         const hasTimeConflict = await checkServiceTimeConflict(
@@ -343,18 +349,49 @@ export const update = async (req, res, next) => {
             delete data.user_id; // Eliminar user_id del body si viene
         }
 
-        // Recalcular end_time si es necesario
-        if ((data.start_time || data.service_id) && !data.end_time) {
+        // Verificar el servicio si se está cambiando
+        if (data.service_id) {
+            const serviceInfo = await getServiceInfo(data.service_id);
+            if (!serviceInfo) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'El servicio no existe'
+                });
+            }
+
+            if (!serviceInfo.available) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'El servicio no está disponible'
+                });
+            }
+
+            if (!serviceInfo.duration || serviceInfo.duration <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'El servicio no tiene una duración válida configurada'
+                });
+            }
+        }
+
+        // SIEMPRE recalcular end_time basado en la duración del servicio
+        // Esto es necesario si cambia start_time o service_id
+        if (data.start_time || data.service_id) {
             const currentServiceId = data.service_id || existingAppointment.service_id;
             const serviceInfo = await getServiceInfo(currentServiceId);
             
-            if (serviceInfo && serviceInfo.duration) {
-                const currentStartTime = data.start_time || existingAppointment.start_time;
-                data.end_time = calculateEndTime(currentStartTime, serviceInfo.duration);
+            if (!serviceInfo || !serviceInfo.duration || serviceInfo.duration <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'No se puede actualizar: el servicio no tiene una duración válida'
+                });
             }
+
+            const currentStartTime = data.start_time || existingAppointment.start_time;
+            data.end_time = calculateEndTime(currentStartTime, serviceInfo.duration);
         }
         
-        //  Verificar conflictos de horario
+        //  Verificar conflictos de horario y duplicados
         if (data.appointment_date || data.start_time || data.end_time) {
             const newDate = data.appointment_date || existingAppointment.appointment_date;
             const newStartTime = data.start_time || existingAppointment.start_time;
@@ -367,6 +404,21 @@ export const update = async (req, res, next) => {
                 return res.status(409).json({
                     success: false,
                     message: 'El horario solicitado no está disponible, hay conflicto con otra cita'
+                });
+            }
+
+            // Verificar que el usuario no tenga otra cita programada en la misma fecha y hora (excluyendo la cita actual)
+            const isDuplicate = await checkDuplicateAppointment(
+                userId, 
+                newDate, 
+                newStartTime, 
+                id
+            );
+
+            if (isDuplicate) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'Ya tiene una cita programada en esa fecha y hora'
                 });
             }
         }

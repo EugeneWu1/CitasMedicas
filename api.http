@@ -16,8 +16,8 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "user":"easl2991@hotmail.com",
-  "password":"Evelyn12345/"
+  "user": "eve.sabillon2991@gmail.com",
+  "password": "amyWine123#"
 }
 
 ###Inicio de Sesión2
@@ -32,12 +32,12 @@ Content-Type: application/json
 ###Actualizar Contraseña
 PATCH http://localhost:3000/api/auth/set-password
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkejlidjloSk5OS2F2OElxWk1zZGZ6LmxPclpPSUtBRnFGdUZVaDNLSkVGVmc5YTVHRUR6SnUiLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1NDI2MDg2MSwiZXhwIjoxNzU0MjY0NDYxfQ.2q4GGpuaL8NRPGedf1rbzeCUi_aoRekP4PcLwaxViyk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRiMGYyMDMwLWU4OTYtNGVmNy1hODI4LTQ5MTlhYWJjYmY4MyIsInBhc3N3b3JkX2hhc2giOiIkMmIkMTAkajVna2xlLzBQME5tLy81TXh3OEpadUJXQWNDaE9CbjJCNkJSblJMLkYvaDZGSTdlanVuU0siLCJtdXN0Q2hhbmdlUGFzc3dvcmQiOnRydWUsImlhdCI6MTc1NDg0NDk3NSwiZXhwIjoxNzU0ODQ4NTc1fQ.BO3d1QgUmhBEesLNHcd86D4O6KOPbcZXiMvGfhjo5Cw
 
 { 
- "old_password":"-jyl}2nzQa5P",
- "new_password":"ErickMendez123#", 
- "confirm_password": "ErickMendez123#"
+ "old_password":"p6o^CN7Y$cM,",
+ "new_password":"amyWine123#", 
+ "confirm_password": "amyWine123#"
 }
 
 ### Mostrar todos los usuarios, primer token de admin, segundo de cliente
@@ -125,7 +125,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 ### Obtener todas las citas del usuario autenticado
 GET http://localhost:3000/api/citas?page=1&limit=1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRiMGYyMDMwLWU4OTYtNGVmNy1hODI4LTQ5MTlhYWJjYmY4MyIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ4NDUwODQsImV4cCI6MTc1NDg4ODI4NH0.G8fIQw7wy-O0eLoUFoVbK16rZJEvtpzthLUOJxwwzQo
+
 
 ### Obtener citas del usuario autenticado - Solo programadas
 GET http://localhost:3000/api/citas?status=scheduled
@@ -156,12 +157,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5L
 ### Crear una cita  - user_id se toma del token JWT
 POST http://localhost:3000/api/citas
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ4MjQ1NjMsImV4cCI6MTc1NDg2Nzc2M30.7NT-nNyP_xxFjk4IaGdK92iRF3674097FxxKJJ-uKZo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRiMGYyMDMwLWU4OTYtNGVmNy1hODI4LTQ5MTlhYWJjYmY4MyIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ4NDUwODQsImV4cCI6MTc1NDg4ODI4NH0.G8fIQw7wy-O0eLoUFoVbK16rZJEvtpzthLUOJxwwzQo
 
 {
-  "service_id": "8e69dfa9-ce1d-486b-a1e5-1dbe32a40b5d",
-  "appointment_date": "2025-08-16",
-  "start_time": "10:30:00",
+  "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
+  "appointment_date": "2025-09-16",
+  "start_time": "11:00:00",
   "notes": "Primera consulta"
 }
 

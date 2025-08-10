@@ -306,7 +306,7 @@ export const checkDuplicateAppointment = async (user_id, appointment_date, start
         WHERE user_id = UUID_TO_BIN(?) 
         AND appointment_date = ? 
         AND start_time = ? 
-        AND status != 'cancelled'
+        AND status = 'scheduled'
     `;
     
     const params = [user_id, appointment_date, start_time]
@@ -323,9 +323,10 @@ export const checkDuplicateAppointment = async (user_id, appointment_date, start
 //Funcion para verificar conflictos de horario en un servicio específico
 export const checkServiceTimeConflict = async (appointment_date, start_time, end_time, excludeId = null) => {
     try {
-        // Si no hay end_time, no verificar conflictos complejos
-        if (!end_time) {
-            return false;
+        // Validar que tengamos todos los parámetros necesarios
+        if (!appointment_date || !start_time || !end_time) {
+            console.warn('checkServiceTimeConflict: Parámetros incompletos', { appointment_date, start_time, end_time });
+            return false; // Si no tenemos datos completos, no podemos validar conflictos
         }
 
         let query = `
