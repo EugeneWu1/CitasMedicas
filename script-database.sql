@@ -46,28 +46,17 @@ CREATE TABLE `appointment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `notification` (
-  `notification_id` char(36) NOT NULL DEFAULT (uuid()),
+  `id` char(36) NOT NULL,
   `user_id` binary(16) NOT NULL,
   `appointment_id` char(36) DEFAULT NULL,
-  `type` enum('appointment_created','appointment_cancelled','appointment_reminder','appointment_completed','system_notification','service_updated') NOT NULL,
-  `title` varchar(200) NOT NULL,
-  `message` text NOT NULL,
+  `type` enum('cita_creada','cita_cancelada','recordatorio','sistema') NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `message` varchar(500) NOT NULL,
   `is_read` tinyint(1) NOT NULL DEFAULT '0',
-  `priority` enum('low','medium','high') NOT NULL DEFAULT 'medium',
-  `scheduled_for` datetime DEFAULT NULL COMMENT 'Para notificaciones programadas/recordatorios',
-  `sent_at` timestamp NULL DEFAULT NULL COMMENT 'Cuando se envió la notificación',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`notification_id`),
+  PRIMARY KEY (`id`),
   KEY `idx_user_id` (`user_id`),
-  KEY `idx_appointment_id` (`appointment_id`),
-  KEY `idx_type` (`type`),
-  KEY `idx_is_read` (`is_read`),
-  KEY `idx_priority` (`priority`),
-  KEY `idx_scheduled_for` (`scheduled_for`),
-  KEY `idx_created_at` (`created_at`),
-  KEY `idx_user_unread` (`user_id`,`is_read`),
-  KEY `idx_user_type` (`user_id`,`type`),
-  CONSTRAINT `notification_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `notification_ibfk_2` FOREIGN KEY (`appointment_id`) REFERENCES `appointment` (`appointment_id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `idx_user_unread` (`user_id`, `is_read`),
+  CONSTRAINT `fk_notifications_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_notifications_appointment` FOREIGN KEY (`appointment_id`) REFERENCES `appointment` (`appointment_id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

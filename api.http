@@ -16,8 +16,8 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "user":"emendeza@unah.hn",
-  "password":"ErickMendez123#"
+  "user":"easl2991@hotmail.com",
+  "password":"Evelyn12345/"
 }
 
 ###Inicio de Sesión2
@@ -54,7 +54,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 
 
-######################################     Servicios        ################################################ 
+######################################     Servicios    ################################################ 
 
 ### Consulta de todos los servicios
 GET http://localhost:3000/api/servicios
@@ -123,82 +123,73 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 ###################################  Citas ################################################ 
 
-### Obtener todas las citas por usuario (cliente) - Sin paginación
-GET http://localhost:3000/api/citas/0949fb0f-1b68-4069-ad98-e4a7de6636f9
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
+### Obtener todas las citas del usuario autenticado
+GET http://localhost:3000/api/citas?page=1&limit=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
 
-### Obtener todas las citas por usuario (cliente) - Con paginación (página 1, 5 elementos)
-GET http://localhost:3000/api/citas/0949fb0f-1b68-4069-ad98-e4a7de6636f9?page=1&limit=5
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+### Obtener citas del usuario autenticado - Solo programadas
+GET http://localhost:3000/api/citas?status=scheduled
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
 
-### Obtener todas las citas por usuario (cliente) - Con paginación (página 2, 10 elementos)
-GET http://localhost:3000/api/citas/0949fb0f-1b68-4069-ad98-e4a7de6636f9?page=2&limit=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+### Obtener citas del usuario autenticado - Solo canceladas (con paginación)
+GET http://localhost:3000/api/citas?status=cancelled&page=1&limit=5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
 
-### Obtener todas las citas programadas - Sin paginación
-GET http://localhost:3000/api/citas/admin/scheduled
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
+### ADMIN: Obtener todas las citas - Sin filtros (muestra todas por defecto)
+GET http://localhost:3000/api/citas/admin/citas
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
+###Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ4MjU2MzIsImV4cCI6MTc1NDg2ODgzMn0.zISCm5-l72W7b6o6RvsXXXGY8zBbJ2s34mRdHUmlmzM
 
-### Obtener todas las citas programadas - Con paginación (página 1, 20 elementos)
-GET http://localhost:3000/api/citas/admin/scheduled?page=1&limit=20
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+### ADMIN: Obtener todas las citas programadas - Con paginación
+GET http://localhost:3000/api/citas/admin/citas?status=scheduled&page=1&limit=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
 
-### Obtener todas las citas canceladas - Sin paginación
-GET http://localhost:3000/api/citas/admin/cancelled
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+### ADMIN: Obtener todas las citas canceladas - Con paginación
+GET http://localhost:3000/api/citas/admin/citas?status=cancelled&page=1&limit=15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
 
-### Obtener todas las citas canceladas - Con paginación (página 1, 15 elementos)
-GET http://localhost:3000/api/citas/admin/cancelled?page=1&limit=15
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+### ADMIN: Obtener todas las citas completadas - Con paginación
+GET http://localhost:3000/api/citas/admin/citas?status=completed&page=1&limit=25
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
 
-### Obtener todas las citas completadas - Sin paginación
-GET http://localhost:3000/api/citas/admin/completed
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
 
-### Obtener todas las citas completadas - Con paginación (página 1, 25 elementos)
-GET http://localhost:3000/api/citas/admin/completed?page=1&limit=25
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
-
-### Crear una cita (cliente)
+### Crear una cita  - user_id se toma del token JWT
 POST http://localhost:3000/api/citas
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ4MjQ1NjMsImV4cCI6MTc1NDg2Nzc2M30.7NT-nNyP_xxFjk4IaGdK92iRF3674097FxxKJJ-uKZo
 
 {
-  "user_id": "13891c48-358f-47e0-974c-d79559bf0fd9",
-  "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
-  "appointment_date": "2025-08-15",
-  "start_time": "09:30:00",
+  "service_id": "8e69dfa9-ce1d-486b-a1e5-1dbe32a40b5d",
+  "appointment_date": "2025-08-16",
+  "start_time": "10:30:00",
   "notes": "Primera consulta"
 }
 
-### Crear otra cita (cliente)
-POST http://localhost:3000/api/citas
+### Actualizar una cita - user_id se toma del token JWT
+PUT http://localhost:3000/api/citas/74644257-07f9-4e39-bbd5-ffe6322c3f88
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI4YjYxZGQ5LTc4YTEtNGRhYi05ZTYxLTczM2MzZDViMzA1YSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDgyMjQ1MSwiZXhwIjoxNzU0ODY1NjUxfQ.5k9o27_Ji1yNLzFzyPXkWDvDT9sc6mi8_H7do2SnBs4
 
 {
-  "user_id": "13891c48-358f-47e0-974c-d79559bf0fd9",
+  "appointment_date": "2025-08-19",
+  "start_time": "10:30:00",
+  "status": "cancelled",
+  "notes": "Cambio de fecha solicitado por el paciente"
+}
+
+
+### Crear otra cita (cliente) - user_id se toma del token JWT
+POST http://localhost:3000/api/citas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ4MjQ1NjMsImV4cCI6MTc1NDg2Nzc2M30.7NT-nNyP_xxFjk4IaGdK92iRF3674097FxxKJJ-uKZo
+
+{
   "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
   "appointment_date": "2025-08-16",
-  "start_time": "14:00:00",
-  "end_time": "14:30:00",
-  "status": "scheduled",
+  "start_time": "12:30:00",
   "notes": "Consulta de seguimiento"
 }
 
-### Actualizar una cita (cliente)
-PUT http://localhost:3000/api/citas/4060428a-0e2f-4ae3-8de1-e67992d7ac39
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
-
-{
-  "user_id": "13891c48-358f-47e0-974c-d79559bf0fd9",
-  "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
-  "appointment_date": "2025-09-16",
-  "start_time": "11:00:00",
-  "notes": "Cambio de fecha solicitado por el paciente"
-}
 
 ### Actualizar estado de una cita (cambiar a completado)
 PUT http://localhost:3000/api/citas/84913df7-22d9-4141-9ff2-4d00c8cb7189
@@ -269,23 +260,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4L
   "notes": "Consulta de seguimiento"
 }
 
-
 #### Borrar una cita
-DELETE http://localhost:3000/api/citas/1765488c-950a-4aa8-9af9-619651177459
+DELETE http://localhost:3000/api/citas/74644257-07f9-4e39-bbd5-ffe6322c3f88
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
-
-### Ver la disponibilidad de horarios con parámetros específicos
-GET http://localhost:3000/api/citas/availableSlots?service_id=db4c169c-31a0-446b-8fc0-3e49732c8a07&date=2025-08-16
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
-
-### Disponibilidad para servicio específico sin fecha
-GET http://localhost:3000/api/citas/availableSlots?service_id=db4c169c-31a0-446b-8fc0-3e49732c8a07
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
-
-### Disponibilidad para fecha específica sin servicio
-GET http://localhost:3000/api/citas/availableSlots?date=2025-08-16
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ4MjQ1NjMsImV4cCI6MTc1NDg2Nzc2M30.7NT-nNyP_xxFjk4IaGdK92iRF3674097FxxKJJ-uKZo
 
 
 
@@ -294,42 +272,57 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
 
 ###########################   Notificaciones  ################################################ 
 
-### Obtener notificaciones del usuario (con paginación)
-GET http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b?page=1&limit=10
+### Obtener notificaciones del usuario
+GET http://localhost:3000/api/notificaciones
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
+### Obtener solo notificaciones no leídas
+GET http://localhost:3000/api/notificaciones?is_read=false
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
-### Crear nueva notificación
+### Crear notificación manual (recordatorio) - user_id se toma del token JWT
 POST http://localhost:3000/api/notificaciones/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 {
-  "user_id": "25d23db5-92a8-4b4b-aca8-3db01a06041b",
-  "type": "appointment_reminder",
+  "type": "recordatorio",
   "title": "Recordatorio de Cita",
-  "message": "Su cita está programada para mañana a las 10:00 AM. Por favor confirme su asistencia.",
-  "priority": "medium"
+  "message": "Su cita está programada para mañana a las 10:00 AM. Por favor confirme su asistencia."
 }
 
-### Crear notificación con cita asociada
+### Crear notificación de sistema - user_id se toma del token JWT
 POST http://localhost:3000/api/notificaciones/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc0MDAyNCwiZXhwIjoxNzU0NzgzMjI0fQ.QkBDXrgN9fAlDudcILBCb38w1-snQES-2qgNbgMWMHk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
+
+{
+  "type": "sistema",
+  "title": "Actualización del Sistema",
+  "message": "El sistema estará en mantenimiento el próximo domingo de 2:00 AM a 4:00 AM."
+}
+
+### ⭐ PRUEBA AUTOMÁTICA: Crear una cita (debería generar notificación automática)
+POST http://localhost:3000/api/citas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 {
   "user_id": "13891c48-358f-47e0-974c-d79559bf0fd9",
-  "appointment_id": "123e4567-e89b-12d3-a456-426614174000",
-  "type": "appointment_created",
-  "title": "Cita Agendada",
-  "message": "Su cita ha sido agendada exitosamente para el 15 de agosto a las 10:00 AM.",
-  "priority": "high"
+  "service_id": "db4c169c-31a0-446b-8fc0-3e49732c8a07",
+  "appointment_date": "2025-08-25",
+  "start_time": "10:00:00",
+  "notes": "Cita de prueba para notificaciones automáticas"
 }
 
+### ⭐ VER NOTIFICACIONES después de crear la cita
+GET http://localhost:3000/api/notificaciones
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
+
 ### Marcar notificación como leída
-PUT http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/d6423d78-755f-11f0-9480-02af326b9ff1/read
+PUT http://localhost:3000/api/notificaciones/25aa287b-2929-4692-8172-54074f6d1a1b/read
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
 
 ### Eliminar notificación específica
-DELETE http://localhost:3000/api/notificaciones/25d23db5-92a8-4b4b-aca8-3db01a06041b/123e4567-e89b-12d3-a456-426614174001
+DELETE http://localhost:3000/api/notificaciones/25aa287b-2929-4692-8172-54074f6d1a1b
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM

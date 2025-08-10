@@ -1,8 +1,6 @@
 import {Router} from 'express'
 import{ isAdmin } from '../middlewares/isAdmin.js'
 import {verifyToken} from '../middlewares/isAuth.js'
-
-
 import {
     getAll, availableService,createService, updateService,changeAvailability ,deleteService
 } from '../Controllers/servicios.controller.js'
@@ -25,17 +23,6 @@ const serviceRouter = Router()
  *     responses:
  *       200:
  *         description: Lista de servicios
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
  */
 //Consultar todos los servicios
 serviceRouter.get('/',getAll)
@@ -155,27 +142,6 @@ serviceRouter.get('/disponibilidad',availableService)
  *         description: Acceso denegado - Solo administradores
  *       404:
  *         description: Servicio no encontrado
- *   delete:
- *     summary: Eliminar un servicio (Solo admin)
- *     tags: [Servicios]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         example: "614bb6a9-59f0-410e-a373-754f847123a0"
- *     responses:
- *       200:
- *         description: Servicio eliminado exitosamente
- *       401:
- *         description: Token inválido
- *       403:
- *         description: Acceso denegado - Solo administradores
- *       404:
- *         description: Servicio no encontrado
  */
 //Actualizar servicio
 serviceRouter.put('/:id',[verifyToken,isAdmin],updateService)
@@ -220,6 +186,31 @@ serviceRouter.put('/:id',[verifyToken,isAdmin],updateService)
 //Actualizar disponibilidad
 serviceRouter.put('/:id/disponibilidad',[verifyToken,isAdmin], changeAvailability)
 
+/**
+ * @swagger
+ * /servicios/{id}:
+ *  delete:
+ *      summary: Eliminar un servicio (Solo admin)
+ *      tags: [Servicios]
+ *      security:
+ *        - bearerAuth: []
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          schema:
+ *            type: string
+ *          example: "614bb6a9-59f0-410e-a373-754f847123a0"
+ *      responses:
+ *        200:
+ *          description: Servicio eliminado exitosamente
+ *        401:
+ *          description: Token inválido
+ *        403:
+ *          description: Acceso denegado - Solo administradores
+ *        404:
+ *          description: Servicio no encontrado
+ */
 //Borrar un servicio
 serviceRouter.delete('/:id',[verifyToken,isAdmin],deleteService)
 

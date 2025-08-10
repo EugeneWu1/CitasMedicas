@@ -1,73 +1,115 @@
-import e from 'cors';
 import {
-    getAllAppointmentsFromUser,
+    getAllAppointments,
+    getUserAppointments,
     createAppointment,
-    deleteAppointment,
-    getAllScheduledAppointments,
     updateAppointment,
+    deleteAppointment,
     checkDuplicateAppointment,
     checkServiceTimeConflict,
     getServiceInfo,
     calculateEndTime,
     checkUserExists,
     getAppointmentById,
-    convertUserIdToUuid,
-    getAvailableTimeSlots,
-    getAllCancelledAppointments,
-    getAllCompletedAppointments
 } from '../Models/citas.models.js'
-import { validateAppointments, validateAppointmentUpdate, validateAppointmentId, validateUserId } from '../Schemas/citas.schema.js'
+import { validateAppointments, validateAppointmentUpdate, validateAppointmentId} from '../Schemas/citas.schema.js'
 import { v4 as uuidv4 } from 'uuid';
+import { createNotification } from '../Models/notificaciones.models.js';
+
+
+
+//ver todas las citas agendadas por el cliente con paginacion
+export const getAllScheduled = async (req, res, next) => {
+    try {
+        // Obtener parametros de paginacion y filtro de estado de query parameters
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const status = req.query.status; // scheduled, cancelled, completed
+        
+        // Validar parametros de paginacion
+        if (page < 1) {
+            const validationError = new Error('El número de página debe ser mayor a 0')
+            validationError.status = 400
+            return next(validationError)
+        }
+        
+        if (limit < 1 || limit > 100) {
+            const validationError = new Error('El límite debe estar entre 1 y 100')
+            validationError.status = 400
+            return next(validationError)
+        }
+
+        // Validar el status si se proporciona
+        if (status && !['scheduled', 'cancelled', 'completed'].includes(status)) {
+            const validationError = new Error('El estado debe ser: scheduled, cancelled o completed')
+            validationError.status = 400
+            return next(validationError)
+        }
+
+        // Si no se especifica status, mostrar todas las citas
+        const result = await getAllAppointments(page, limit, status)
+
+        // Verificar si no hay citas
+        if (!result.data || result.data.length === 0) {
+            return res.status(204).send()
+        }
+
+        res.status(200).json({
+            success: true,
+            data: result.data,
+            pagination: result.pagination
+        })
+
+    } catch (error) {
+        return next(error)
+    }
+}
 
 
 //Consultar todas las citas del cliente con paginacion
 export const getAll = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        // Obtener el ID del usuario del token JWT
+        const userId = req.user.id
         
-        // Obtener parametros de paginacion de query parameters
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        // Obtener parametros de paginacion y filtro de estado de query parameters
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const status = req.query.status // scheduled, cancelled, completed
         
         // Validar parametros de paginacion
         if (page < 1) {
-            const validationError = new Error('El número de página debe ser mayor a 0');
-            validationError.status = 400;
-            return next(validationError);
+            const validationError = new Error('El número de página debe ser mayor a 0')
+            validationError.status = 400
+            return next(validationError)
         }
         
         if (limit < 1 || limit > 100) {
-            const validationError = new Error('El límite debe estar entre 1 y 100');
-            validationError.status = 400;
-            return next(validationError);
+            const validationError = new Error('El límite debe estar entre 1 y 100')
+            validationError.status = 400
+            return next(validationError)
         }
-       
-        // Validar el ID
-        const idValidation = validateUserId(id);
-        if (!idValidation.success) {
-            const validationError = new Error('ID de usuario inválido');
-            validationError.status = 400;
-            return next(validationError);
+
+        // Validar el status si se proporciona
+        if (status && !['scheduled', 'cancelled', 'completed'].includes(status)) {
+            const validationError = new Error('El estado debe ser: scheduled, cancelled o completed')
+            validationError.status = 400
+            return next(validationError)
         }
 
         // Verificar que el usuario existe
-        const userExists = await checkUserExists(id);
+        const userExists = await checkUserExists(userId)
         if (!userExists) {
             return res.status(404).json({
                 success: false,
                 message: 'El usuario no existe'
-            });
+            })
         }
 
-        const result = await getAllAppointmentsFromUser(id, page, limit);
+        const result = await getUserAppointments(userId, page, limit, status)
 
         // Verificar si el usuario no tiene citas
         if (!result.data || result.data.length === 0) {
-            return res.status(200).json({
-                success: true,
-                data: [],
-                pagination: result.pagination
-            });
+            return res.status(204).send();
         }
 
         res.status(200).json({
@@ -77,7 +119,6 @@ export const getAll = async (req, res, next) => {
         });
 
     } catch (error) {
-        // Manejo de errores
         return next(error);
     }
 }
@@ -85,7 +126,9 @@ export const getAll = async (req, res, next) => {
 //Crear una cita 
 export const create = async (req, res, next) => {
     try {
-        const data = req.body;
+        // Obtener el ID del usuario del token JWT
+        const userId = req.user.id
+        const data = req.body
 
         // Validar los datos con Zod
         const { success, data: safeData, error } = validateAppointments(data);
@@ -95,6 +138,9 @@ export const create = async (req, res, next) => {
             validationError.status = 400;
             return next(validationError);
         }
+
+        // Asignar el user_id del token (sobrescribir cualquier valor del body)
+        safeData.user_id = userId;
 
         // Verificar que el usuario existe
         const userExists = await checkUserExists(safeData.user_id);
@@ -164,6 +210,23 @@ export const create = async (req, res, next) => {
 
         const result = await createAppointment(appointmentData);
 
+        // Crear notificación automática de cita creada
+        try {
+            const formattedDate = formatDateForNotification(safeData.appointment_date);
+            const formattedTime = formatTimeForNotification(safeData.start_time);
+            
+            await createNotification({
+                notificationId: uuidv4(), // Generar ID para la notificación
+                userId: safeData.user_id,
+                appointmentId: appointmentId,
+                type: 'cita_creada',
+                title: 'Cita Programada',
+                message: `Su cita de ${serviceInfo.name} ha sido programada exitosamente para el ${formattedDate} a las ${formattedTime}.`
+            });
+        } catch (notificationError) {
+            console.error('Error al crear notificación:', notificationError);
+        }
+
         res.status(201).json({
             success: true,
             message: 'Cita creada exitosamente',
@@ -189,7 +252,35 @@ export const remove = async (req, res, next) => {
             return next(validationError)
         }
 
+        // Obtener información de la cita antes de eliminarla para la notificación
+        const appointmentInfo = await getAppointmentById(id);
+        
+        if (!appointmentInfo) {
+            return res.status(404).json({
+                success: false,
+                message: 'Cita no encontrada'
+            });
+        }
+
         const result = await deleteAppointment(id)
+
+        // Crear notificación automática de cita cancelada
+        try {
+            const formattedDate = formatDateForNotification(appointmentInfo.appointment_date);
+            const formattedTime = formatTimeForNotification(appointmentInfo.start_time);
+            
+            await createNotification({
+                notificationId: uuidv4(), // Generar ID para la notificación
+                userId: appointmentInfo.user_id,
+                appointmentId: id,
+                type: 'cita_cancelada',
+                title: 'Cita Cancelada',
+                message: `Su cita programada para el ${formattedDate} a las ${formattedTime} ha sido cancelada.`
+            });
+        } catch (notificationError) {
+            console.error('Error al crear notificación de cancelación:', notificationError);
+            // No afectar el flujo principal si falla la notificación
+        }
 
         res.status(200).json({
             success: true,
@@ -204,52 +295,14 @@ export const remove = async (req, res, next) => {
     }
 }
 
-//ver todas las citas agendadas por el cliente con paginacion
-export const getAllScheduled = async (req, res, next) => {
-    try {
-        // Obtener parametros de paginacion de query parameters
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        
-        // Validar parametros de paginacion
-        if (page < 1) {
-            const validationError = new Error('El número de página debe ser mayor a 0');
-            validationError.status = 400;
-            return next(validationError);
-        }
-        
-        if (limit < 1 || limit > 100) {
-            const validationError = new Error('El límite debe estar entre 1 y 100');
-            validationError.status = 400;
-            return next(validationError);
-        }
 
-        const result = await getAllScheduledAppointments(page, limit);
-
-        // Verificar si no hay citas programadas
-        if (!result.data || result.data.length === 0) {
-            return res.status(200).json({
-                success: true,
-                data: [],
-                pagination: result.pagination
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: result.data,
-            pagination: result.pagination
-        });
-
-    } catch (error) {
-        return next(error);
-    }
-}
 
 //Actualizar cita
 export const update = async (req, res, next) => {
     try {
         const { id } = req.params;
+        // Obtener el ID del usuario del token JWT
+        const userId = req.user.id;
 
         // validar el ID
         const idValidation = validateAppointmentId(id)
@@ -275,6 +328,19 @@ export const update = async (req, res, next) => {
             const validationError = new Error('La cita no existe');
             validationError.status = 404;
             return next(validationError);
+        }
+
+        // Verificar que la cita pertenece al usuario autenticado
+        if (existingAppointment.user_id !== userId) {
+            return res.status(403).json({
+                success: false,
+                message: 'No tiene permisos para modificar esta cita'
+            });
+        }
+
+        // Asegurar que el user_id no se pueda cambiar desde el body
+        if (data.user_id) {
+            delete data.user_id; // Eliminar user_id del body si viene
         }
 
         // Recalcular end_time si es necesario
@@ -320,139 +386,27 @@ export const update = async (req, res, next) => {
 }
 
 
-// Obtener todas las citas canceladas con paginacion
-export const getAllCancelled = async (req, res, next) => {
-    try {
-        // Obtener parametros de paginacion de query parameters
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        
-        // Validar parametros de paginacion
-        if (page < 1) {
-            const validationError = new Error('El número de página debe ser mayor a 0');
-            validationError.status = 400;
-            return next(validationError);
-        }
-        
-        if (limit < 1 || limit > 100) {
-            const validationError = new Error('El límite debe estar entre 1 y 100');
-            validationError.status = 400;
-            return next(validationError);
-        }
-
-        const result = await getAllCancelledAppointments(page, limit);
-
-        // Verificar si no hay citas canceladas
-        if (!result.data || result.data.length === 0) {
-            return res.status(200).json({
-                success: true,
-                data: [],
-                pagination: result.pagination
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: result.data,
-            pagination: result.pagination
-        });
-
-    } catch (error) {
-        return next(error);
-    }
-}
-
-//Obtener todas las citas completadas con paginacion
-export const getAllCompleted = async (req, res, next) => {
-    try {
-        // Obtener parametros de paginacion de query parameters
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        
-        // Validar parametros de paginacion
-        if (page < 1) {
-            const validationError = new Error('El número de página debe ser mayor a 0');
-            validationError.status = 400;
-            return next(validationError);
-        }
-        
-        if (limit < 1 || limit > 100) {
-            const validationError = new Error('El límite debe estar entre 1 y 100');
-            validationError.status = 400;
-            return next(validationError);
-        }
-
-        const result = await getAllCompletedAppointments(page, limit);
-
-        // Verificar si no hay citas completadas
-        if (!result.data || result.data.length === 0) {
-            return res.status(200).json({
-                success: true,
-                data: [],
-                pagination: result.pagination
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: result.data,
-            pagination: result.pagination
-        });
-
-    } catch (error) {
-        return next(error);
-    } 
-}
 
 
-//Obtener horarios disponibles para un servicio en una fecha específica
-export const getAvailableSlots = async (req, res, next) => {
-    try {
-        const { service_id, date } = req.query;
+// Helper para formatear fecha para notificaciones
+const formatDateForNotification = (date) => {
+    const dateObj = new Date(date);
+    return dateObj.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+};
 
-        if (!service_id || !date) {
-            return res.status(400).json({
-                success: false,
-                message: 'service_id y date son requeridos'
-            });
-        }
-
-        // Validar que el servicio existe
-        const serviceInfo = await getServiceInfo(service_id);
-        if (!serviceInfo) {
-            return res.status(404).json({
-                success: false,
-                message: 'El servicio no existe'
-            });
-        }
-
-        if (!serviceInfo.available) {
-            return res.status(400).json({
-                success: false,
-                message: 'El servicio no está disponible'
-            });
-        }
-
-        // Obtener horarios disponibles
-        const availableSlots = await getAvailableTimeSlots(date, service_id);
-
-        if (availableSlots.length === 0) {
-            return res.status(204).send();
-        }
-
-        res.status(200).json({
-            success: true,
-            date: date,
-            service: {
-                id: service_id,
-                name: serviceInfo.name,
-                duration: serviceInfo.duration
-            },
-            available_slots: availableSlots
-        });
-
-    } catch (error) {
-        console.error('Error en getAvailableSlots:', error);
-        return next(error);
-    }
-}
+// Helper para formatear hora para notificaciones
+const formatTimeForNotification = (time) => {
+    const [hours, minutes] = time.split(':');
+    const date = new Date();
+    date.setHours(parseInt(hours), parseInt(minutes));
+    return date.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+};

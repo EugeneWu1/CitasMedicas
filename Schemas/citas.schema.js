@@ -5,7 +5,7 @@ const appointmentSchema = z.object({
   user_id: z.string().regex(
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
     'El user_id debe ser un UUID válido'
-  ),
+  ).optional(), // Ahora es opcional porque se toma del token
 
   service_id: z.string().regex(
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
@@ -90,12 +90,5 @@ export const validateAppointmentId = (id) => {
   return z.string().regex(
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
     'El appointment_id debe ser un UUID válido'
-  ).safeParse(id)
-}
-
-export const validateUserId = (id) => {
-  return z.string().regex(
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-    'El user_id debe ser un UUID válido'
   ).safeParse(id)
 }

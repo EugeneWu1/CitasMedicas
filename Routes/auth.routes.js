@@ -53,94 +53,12 @@ const userRouter = Router();
  *     responses:
  *       200:
  *         description: Usuario creado correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "Usuario creado correctamente"
- *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       format: uuid
- *                       example: "1389c148-358f-47e0-974c-d79559bf0fd9"
- *                     name:
- *                       type: string
- *                       example: "John Doe"
- *                     email:
- *                       type: string
- *                       example: "jodoe@gmail.com"
- *                     phone:
- *                       type: string
- *                       example: "33333333"
  *       400:
  *         description: Error de validación en los datos de entrada
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Error en los datos de entrada"
- *                 errors:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       code:
- *                         type: string
- *                         example: "invalid_type"
- *                       expected:
- *                         type: string
- *                         example: "string"
- *                       received:
- *                         type: string
- *                         example: "undefined"
- *                       path:
- *                         type: array
- *                         items:
- *                           type: string
- *                         example: ["email"]
- *                       message:
- *                         type: string
- *                         example: "Required"
  *       409:
  *         description: El email ya está registrado en el sistema
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "El email ya está registrado en el sistema"
  *       500:
  *         description: Error interno del servidor (email, base de datos, etc.)
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Error al crear usuario"
  */
 userRouter.post('/register',createUser)
 
@@ -170,90 +88,14 @@ userRouter.post('/register',createUser)
  *     responses:
  *       200:
  *         description: Inicio de sesión exitoso - Usuario autenticado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "Usuario autenticado correctamente"
- *                 data:
- *                   type: object
- *                   properties:
- *                     role:
- *                       type: string
- *                       example: "admin"
- *                     name:
- *                       type: string
- *                       example: "Erick Mendoza"
- *                 token:
- *                   type: string
- *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
  *       206:
  *         description: Debe cambiar contraseña - Token temporal generado
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "Debe cambiar su contraseña, su token temporal es válido por 1 hora"
- *                 data:
- *                   type: object
- *                   properties:
- *                     token:
- *                       type: string
- *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
- *                     mustChangePassword:
- *                       type: boolean
- *                       example: true
  *       400:
  *         description: Datos de entrada inválidos o faltantes
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Faltan campos requeridos: user, password"
  *       401:
  *         description: Credenciales incorrectas
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Usuario o contraseña incorrectos"
  *       500:
  *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Error interno del servidor"
  */
 userRouter.post('/login' ,login )
 
@@ -291,17 +133,6 @@ userRouter.post('/login' ,login )
  *     responses:
  *       200:
  *         description: Contraseña actualizada correctamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "Contraseña actualizada correctamente"
  *       400:
  *         description: Error de validación en los datos de entrada
  *         content:
@@ -394,17 +225,6 @@ userRouter.post('/login' ,login )
  *                       example: "Token inválido"
  *       500:
  *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Error interno del servidor al cambiar la contraseña"
  */
 userRouter.patch('/set-password',setPassword)
 
@@ -467,43 +287,10 @@ userRouter.patch('/set-password',setPassword)
  *         description: No hay usuarios registrados en el sistema
  *       401:
  *         description: Token de autenticación requerido o inválido
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Token de acceso requerido"
  *       403:
  *         description: Acceso denegado - Solo administradores
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Acceso denegado"
  *       500:
  *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Error interno del servidor"
  */
 userRouter.get('/users', [verifyToken, isAdmin], getUsers)
 
@@ -596,43 +383,10 @@ userRouter.get('/users', [verifyToken, isAdmin], getUsers)
  *                       example: "El role debe ser client o admin"
  *       401:
  *         description: Token de autenticación requerido o inválido
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Token de acceso requerido"
  *       403:
  *         description: Acceso denegado - Solo administradores
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Acceso denegado"
  *       500:
  *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Error al obtener usuarios por rol"
  */
 userRouter.get('/users/:role', [verifyToken, isAdmin], getByRole)
 

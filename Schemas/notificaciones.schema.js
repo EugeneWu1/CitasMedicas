@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-// Schema para crear notificación
+// Schema para crear notificación (nueva estructura simplificada)
 const createNotificationSchema = z.object({
     user_id: z.string().regex(
         /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
         'El user_id debe ser un UUID válido'
-    ),
+    ).optional(), // Ahora es opcional porque se toma del token
     
     appointment_id: z.string().regex(
         /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
@@ -13,36 +13,22 @@ const createNotificationSchema = z.object({
     ).optional(),
     
     type: z.enum([
-        'appointment_created',
-        'appointment_cancelled', 
-        'appointment_reminder',
-        'appointment_completed',
-        'system_notification',
-        'service_updated'
+        'cita_creada',
+        'cita_cancelada', 
+        'recordatorio',
+        'sistema'
     ], {
         errorMap: () => ({ message: 'Tipo de notificación inválido' })
     }),
     
     title: z.string()
         .min(1, 'El título es requerido')
-        .max(200, 'El título no puede exceder 200 caracteres'),
+        .max(150, 'El título no puede exceder 150 caracteres'),
         
     message: z.string()
         .min(1, 'El mensaje es requerido')
-        .max(1000, 'El mensaje no puede exceder 1000 caracteres'),
-        
-    priority: z.enum(['low', 'medium', 'high']).optional(),
-    
-    scheduled_for: z.string()
-        .datetime('Formato de fecha/hora inválido')
-        .optional()
+        .max(500, 'El mensaje no puede exceder 500 caracteres')
 });
-
-// Schema para validar UUID
-const uuidSchema = z.string().regex(
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-    'Debe ser un UUID válido'
-);
 
 // Schema para ID de notificación
 const notificationIdSchema = z.string().regex(
@@ -53,10 +39,6 @@ const notificationIdSchema = z.string().regex(
 // Funciones de validación
 export const validateCreateNotification = (data) => {
     return createNotificationSchema.safeParse(data);
-};
-
-export const validateUserId = (userId) => {
-    return uuidSchema.safeParse(userId);
 };
 
 export const validateNotificationId = (notificationId) => {

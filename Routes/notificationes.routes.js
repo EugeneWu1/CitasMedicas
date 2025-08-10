@@ -18,52 +18,36 @@ const notificationRouter = Router();
 
 /**
  * @swagger
- * /notificaciones/{userId}:
+ * /api/notificaciones:
  *   get:
- *     summary: Listar notificaciones del usuario autenticado
+ *     summary: Obtener notificaciones del usuario autenticado
+ *     description: Permite a un usuario ver sus propias notificaciones con filtro opcional por estado de lectura
  *     tags: [Notificaciones]
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario
- *         example: "25d23db5-92a8-4b4b-aca8-3db01a06041b"
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: Número de página
- *         example: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: Cantidad de elementos por página
- *         example: 10
  *       - in: query
  *         name: is_read
  *         schema:
  *           type: boolean
- *         description: Filtrar por estado de lectura
- *         example: false
+ *         description: Filtrar por estado de lectura (true/false, opcional)
  *     responses:
  *       200:
- *         description: Lista de notificaciones
+ *         description: Notificaciones obtenidas exitosamente
  *       401:
- *         description: Token inválido
+ *         description: Token no válido
+ *       404:
+ *         description: Usuario no encontrado
  */
-// Obtener notificaciones del usuario (con paginación y filtros)
-notificationRouter.get('/:userId', verifyToken, getNotifications);
+// Obtener notificaciones del usuario autenticado
+notificationRouter.get('/', verifyToken, getNotifications);
 
 /**
  * @swagger
- * /notificaciones:
+ * /api/notificaciones:
  *   post:
  *     summary: Crear nueva notificación
+ *     description: Crear una nueva notificación para el usuario autenticado
  *     tags: [Notificaciones]
  *     security:
  *       - bearerAuth: []
@@ -74,108 +58,84 @@ notificationRouter.get('/:userId', verifyToken, getNotifications);
  *           schema:
  *             type: object
  *             required:
- *               - user_id
- *               - type
- *               - title
  *               - message
+ *               - type
  *             properties:
- *               user_id:
- *                 type: string
- *                 example: "25d23db5-92a8-4b4b-aca8-3db01a06041b"
- *               appointment_id:
- *                 type: string
- *                 example: "123e4567-e89b-12d3-a456-426614174000"
- *               type:
- *                 type: string
- *                 enum: [appointment_reminder, appointment_created, appointment_cancelled]
- *                 example: "appointment_reminder"
- *               title:
- *                 type: string
- *                 example: "Recordatorio de Cita"
  *               message:
  *                 type: string
- *                 example: "Su cita está programada para mañana a las 10:00 AM. Por favor confirme su asistencia."
- *               priority:
+ *                 description: Mensaje de la notificación
+ *               type:
  *                 type: string
- *                 enum: [low, medium, high]
- *                 example: "medium"
+ *                 description: Tipo de notificación
  *     responses:
  *       201:
  *         description: Notificación creada exitosamente
  *       400:
  *         description: Error de validación
  *       401:
- *         description: Token inválido
+ *         description: Token no válido
  */
 // Crear nueva notificación
 notificationRouter.post('/', verifyToken, createNewNotification);
 
 /**
  * @swagger
- * /notificaciones/{userId}/{notificationId}/read:
+ * /api/notificaciones/{notificationId}/read:
  *   put:
- *     summary: Marcar notificación específica como leída
+ *     summary: Marcar notificación como leída
+ *     description: Marca una notificación específica del usuario autenticado como leída
  *     tags: [Notificaciones]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario
- *         example: "25d23db5-92a8-4b4b-aca8-3db01a06041b"
- *       - in: path
  *         name: notificationId
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
  *         description: ID de la notificación
- *         example: "123e4567-e89b-12d3-a456-426614174001"
  *     responses:
  *       200:
- *         description: Notificación marcada como leída
+ *         description: Notificación marcada como leída exitosamente
+ *       400:
+ *         description: ID de notificación inválido
  *       401:
- *         description: Token inválido
+ *         description: Token no válido
  *       404:
- *         description: Notificación no encontrada
+ *         description: Notificación no encontrada o no pertenece al usuario
  */
 // Marcar notificación específica como leída
-notificationRouter.put('/:userId/:notificationId/read', verifyToken, markNotificationAsRead);
+notificationRouter.put('/:notificationId/read', verifyToken, markNotificationAsRead);
 
 /**
  * @swagger
- * /notificaciones/{userId}/{notificationId}:
+ * /api/notificaciones/{notificationId}:
  *   delete:
- *     summary: Eliminar notificación específica
+ *     summary: Eliminar notificación
+ *     description: Elimina una notificación específica del usuario autenticado
  *     tags: [Notificaciones]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario
- *         example: "25d23db5-92a8-4b4b-aca8-3db01a06041b"
- *       - in: path
  *         name: notificationId
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
  *         description: ID de la notificación
- *         example: "123e4567-e89b-12d3-a456-426614174001"
  *     responses:
  *       200:
  *         description: Notificación eliminada exitosamente
+ *       400:
+ *         description: ID de notificación inválido
  *       401:
- *         description: Token inválido
+ *         description: Token no válido
  *       404:
- *         description: Notificación no encontrada
+ *         description: Notificación no encontrada o no pertenece al usuario
  */
 // Eliminar notificación específica
-notificationRouter.delete('/:userId/:notificationId', verifyToken, removeNotification);
+notificationRouter.delete('/:notificationId', verifyToken, removeNotification);
 
 export default notificationRouter;

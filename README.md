@@ -453,11 +453,20 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
 
 ### 📅 **Citas Médicas (`/api/citas`)**
 
-#### `GET /citas/:id`
-- **Descripción**: Consultar todas las citas de un usuario específico con paginación
+#### `GET /citas`
+- **Descripción**: Consultar todas las citas del usuario autenticado con paginación y filtros opcionales
 - **Protección**: 🔒 `verifyToken`
-- **Query Params**: `page` (default: 1), `limit` (default: 10, max: 100)
-- **Validaciones**: Verifica que el usuario exista antes de consultar
+- **Query Params**: 
+  - `page` (opcional): Número de página para paginación (default: 1, mínimo: 1)
+  - `limit` (opcional): Número de citas por página (default: 10, rango: 1-100)
+  - `status` (opcional): Filtrar por estado de cita (`scheduled`, `cancelled`, `completed`)
+- **Validaciones**:
+  - Verifica que el usuario exista antes de consultar
+  - Valida parámetros de paginación y estado
+- **Ejemplos de uso**:
+  - `GET /citas` - Todas las citas del usuario
+  - `GET /citas?status=scheduled` - Solo citas programadas
+  - `GET /citas?status=cancelled&page=2&limit=5` - Citas canceladas con paginación
 - **Respuesta exitosa (200)**:
 ```json
 {
@@ -466,43 +475,81 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
     {
       "appointment_id": "uuid",
       "user_id": "uuid",
+      "user_name": "Andrea Limas",
       "service_id": "uuid",
-      "appointment_date": "2025-08-15",
+      "service_name": "Consulta General",
+      "service_description": "Servicio de consulta medica general",
+      "service_duration": 30,
+      "service_price": 500,
+      "appointment_date": "2025-08-16T06:00:00.000Z",
       "start_time": "09:30:00",
       "end_time": "10:00:00",
       "status": "scheduled",
       "notes": "Primera consulta",
-      "created_at": "2025-08-09T10:00:00Z"
+      "created_at": "2025-08-09T10:00:00Z",
+      "updated_at": "2025-08-10T17:15:42.000Z"
     }
   ],
   "pagination": {
     "currentPage": 1,
-    "totalPages": 3,
-    "totalItems": 15,
-    "itemsPerPage": 10
+    "totalPages": 2,
+    "totalItems": 2,
+    "itemsPerPage": 1,
+    "hasNextPage": true,
+    "hasPreviousPage": false
   }
 }
 ```
-- **Usuario sin citas (200)**:
+- **Sin citas (204)**: No Content
+- **Nota**: El `user_id` se extrae automáticamente del token JWT, no se debe enviar
+
+#### `GET /citas/admin/citas`
+- **Descripción**: Ver todas las citas de todos los usuarios existentes
+- **Protección**: 🔒 `verifyToken` + 🛡️ `isAdmin`
+- **Query Params**: 
+  - `page` (opcional): Número de página para paginación (default: 1, mínimo: 1)
+  - `limit` (opcional): Número de citas por página (default: 10, rango: 1-100)
+  - `status` (opcional): Filtrar por estado de cita (`scheduled`, `cancelled`, `completed`)
+- **Validaciones**:
+  - Valida parámetros de paginación y estado
+- **Ejemplos de uso**:
+  - `GET /citas/admin/citas` - Todas las citas existentes
+  - `GET /citas/admin/citas?status=scheduled` - Solo citas programadas
+  - `GET /citas/admin/citas?status=cancelled&page=2&limit=5` - Citas canceladas con paginación
+- **Respuesta exitosa (200)**:
 ```json
 {
   "success": true,
-  "data": [],
+  "data": [
+    {
+      "appointment_id": "uuid",
+      "user_id": "uuid",
+      "user_name": "Andrea Limas",
+      "user_email": "easl2991@gmail.com",
+      "service_id": "uuid",
+      "service_name": "Consulta General",
+      "appointment_date": "2025-08-16T06:00:00.000Z",
+      "start_time": "09:30:00",
+      "end_time": "10:00:00",
+      "status": "scheduled",
+      "notes": "Primera consulta",
+      "created_at": "2025-08-09T10:00:00Z",
+      "updated_at": "2025-08-10T17:15:42.000Z"
+    }
+  ],
   "pagination": {
     "currentPage": 1,
-    "totalPages": 0,
-    "totalItems": 0,
-    "itemsPerPage": 10
+    "totalPages": 2,
+    "totalItems": 2,
+    "itemsPerPage": 1,
+    "hasNextPage": true,
+    "hasPreviousPage": false
   }
 }
 ```
-- **Usuario no existe (404)**:
-```json
-{
-  "success": false,
-  "message": "El usuario no existe"
-}
-```
+- **Sin citas (204)**: No Content 
+
+
 
 #### `POST /citas`
 - **Descripción**: Crear una nueva cita médica con validaciones completas
@@ -540,33 +587,7 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
 }
 ```
 - **Usuario no existe (404)**:
-```json
-{
-  "success": false,
-  "message": "El usuario no existe"
-}
-```
-- **Servicio no disponible (400)**:
-```json
-{
-  "success": false,
-  "message": "El servicio no está disponible"
-}
-```
-- **Conflicto de horario (409)**:
-```json
-{
-  "success": false,
-  "message": "El horario no está disponible. Ya existe una cita programada en ese horario."
-}
-```
-- **Cita duplicada (409)**:
-```json
-{
-  "success": false,
-  "message": "Ya tiene una cita programada en esa fecha y hora"
-}
-```
+
 
 #### `PUT /citas/:id`
 - **Descripción**: Actualizar una cita existente
@@ -585,12 +606,12 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
   "success": true,
   "message": "Cita actualizada exitosamente",
   "data": {
-    "id": "uuid",
-    "appointment_date": "2025-08-16",
-    "start_time": "14:00:00",
-    "end_time": "14:30:00",
-    "notes": "Cita reprogramada por solicitud del paciente",
-    "updated_at": "2025-08-09T11:00:00Z"
+    "citaData": {
+      "appointment_date": "2025-08-16",
+      "start_time": "14:00:00",
+      "notes": "Cita reprogramada por solicitud del paciente",
+    },
+    "affectedRows": 1
   }
 }
 ```
@@ -602,116 +623,9 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
 ```json
 {
   "success": true,
-  "message": "Cita eliminada exitosamente"
-}
-```
-
-#### `GET /citas/admin/scheduled`
-- **Descripción**: Ver todas las citas programadas (panel admin)
-- **Protección**: 🔒 `verifyToken` + 🛡️ `isAdmin`
-- **Query Params**: `page`, `limit`
-- **Respuesta exitosa (200)**:
-```json
-{
-  "success": true,
-  "data": {
-    "appointments": [
-      {
-        "id": "uuid",
-        "user_name": "Juan Pérez",
-        "user_email": "juan@email.com",
-        "service_name": "Consulta General",
-        "appointment_date": "2025-08-15",
-        "start_time": "09:30:00",
-        "status": "scheduled",
-        "notes": "Primera consulta"
-      }
-    ],
-    "pagination": {
-      "currentPage": 1,
-      "totalPages": 5,
-      "totalItems": 25
-    }
-  }
-}
-```
-
-#### `GET /citas/admin/cancelled`
-- **Descripción**: Ver todas las citas canceladas
-- **Protección**: 🔒 `verifyToken` + 🛡️ `isAdmin`
-- **Respuesta exitosa (200)**:
-```json
-{
-  "success": true,
-  "data": {
-    "appointments": [
-      {
-        "id": "uuid",
-        "user_name": "María García",
-        "service_name": "Consulta Pediátrica",
-        "appointment_date": "2025-08-10",
-        "start_time": "10:00:00",
-        "status": "cancelled",
-        "cancelled_at": "2025-08-09T12:00:00Z"
-      }
-    ]
-  }
-}
-```
-
-#### `GET /citas/admin/completed`
-- **Descripción**: Ver todas las citas completadas
-- **Protección**: 🔒 `verifyToken` + 🛡️ `isAdmin`
-- **Respuesta exitosa (200)**:
-```json
-{
-  "success": true,
-  "data": {
-    "appointments": [
-      {
-        "id": "uuid",
-        "user_name": "Carlos López",
-        "service_name": "Consulta General",
-        "appointment_date": "2025-08-08",
-        "start_time": "11:00:00",
-        "status": "completed",
-        "completed_at": "2025-08-08T11:30:00Z"
-      }
-    ]
-  }
-}
-```
-
-#### `GET /citas/availableSlots?service_id=uuid&date=YYYY-MM-DD`
-- **Descripción**: Consultar horarios disponibles para un servicio en una fecha
-- **Protección**: 🔒 `verifyToken`
-- **Query Params**: `service_id` (requerido), `date` (requerido)
-- **Ejemplo**: `/citas/availableSlots?service_id=abc123&date=2025-08-15`
-- **Respuesta exitosa (200)**:
-```json
-{
-  "success": true,
-  "data": {
-    "service_id": "uuid-servicio",
-    "service_name": "Consulta General",
-    "date": "2025-08-15",
-    "available_slots": [
-      {
-        "start_time": "08:00:00",
-        "end_time": "08:30:00",
-        "available": true
-      },
-      {
-        "start_time": "08:30:00",
-        "end_time": "09:00:00",
-        "available": true
-      },
-      {
-        "start_time": "09:00:00",
-        "end_time": "09:30:00",
-        "available": false
-      }
-    ]
+  "message": "Cita eliminada correctamente",
+  "data":{
+    "Id": "uuid"
   }
 }
 ```
@@ -720,16 +634,13 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
 
 ### 🔔 **Notificaciones (`/api/notificaciones`)**
 
-#### `GET /notificaciones/:userId`
-- **Descripción**: Listar notificaciones del usuario con paginación y filtros
+#### `GET /notificaciones`
+- **Descripción**: Listar todas las notificaciones del usuario autenticado con filtros opcionales
 - **Protección**: 🔒 `verifyToken`
 - **Query Params**: 
-  - `page` (opcional): Número de página (default: 1)
-  - `limit` (opcional): Elementos por página (default: 10, máx: 50)
   - `is_read` (opcional): Filtrar por estado de lectura (true|false)
 - **Validaciones**: 
   - Verifica que el usuario exista
-  - Valida parámetros de paginación
 - **Respuesta exitosa (200)**:
 ```json
 {
@@ -737,47 +648,35 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
   "message": "Notificaciones obtenidas exitosamente",
   "data": [
     {
-      "notification_id": "uuid",
+      "id": "uuid",
       "user_id": "uuid",
-      "type": "appointment_reminder",
-      "title": "Recordatorio de Cita",
-      "message": "Su cita es mañana a las 10:00 AM",
-      "priority": "medium",
+      "appointment_id": "uuid",
+      "type": "cita_creada",
+      "title": "Cita Programada",
+      "message": "Su cita ha sido programada exitosamente para el 15 de agosto a las 10:00 AM",
       "is_read": 0,
       "created_at": "2025-08-09T10:00:00Z"
     }
   ],
-  "pagination": {
-    "currentPage": 1,
-    "totalPages": 3,
-    "totalNotifications": 15,
-    "itemsPerPage": 10
-  }
+  "total": 5
 }
 ```
-- **Usuario no existe (404)**:
-```json
-{
-  "success": false,
-  "message": "Usuario no encontrado"
-}
-```
+- **Sin notificaciones (204)**: No Content
 
 
 #### `POST /notificaciones`
-- **Descripción**: Crear una nueva notificación
+- **Descripción**: Crear una nueva notificación para el usuario autenticado
 - **Protección**: 🔒 `verifyToken`
 - **Validaciones**: 
   - Valida datos de entrada con schema Zod
   - Verifica que el usuario exista
+- **Tipos disponibles**: `cita_creada`, `cita_cancelada`, `recordatorio`, `sistema`
 - **Ejemplo de uso**:
 ```json
 {
-  "user_id": "uuid",
-  "type": "appointment_reminder",
-  "title": "Recordatorio",
-  "message": "Su cita es mañana",
-  "priority": "medium"
+  "type": "sistema",
+  "title": "Actualización del Sistema",
+  "message": "El sistema estará en mantenimiento el próximo domingo de 2:00 AM a 4:00 AM."
 }
 ```
 - **Respuesta exitosa (201)**:
@@ -791,12 +690,14 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
 }
 ```
 
-#### `PUT /notificaciones/:userId/:notificationId/read`
+- **Nota**: El `user_id` se extrae automáticamente del token JWT, no se debe enviar
+
+#### `PUT /notificaciones/:notificationId/read`
 - **Descripción**: Marcar notificación específica como leída
 - **Protección**: 🔒 `verifyToken`
 - **Validaciones**: 
-  - Valida que los IDs sean válidos
-  - Verifica que la notificación exista y pertenezca al usuario
+  - Valida que el ID de notificación sea válido
+  - Verifica que la notificación exista y pertenezca al usuario autenticado
 - **Respuesta exitosa (200)**:
 ```json
 {
@@ -804,11 +705,15 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
   "message": "Notificación marcada como leída"
 }
 ```
+- **Nota**: El `user_id` se extrae automáticamente del token JWT
 
 
-#### `DELETE /notificaciones/:userId/:notificationId`
-- **Descripción**: Eliminar una notificación específica
+#### `DELETE /notificaciones/:notificationId`
+- **Descripción**: Eliminar una notificación específica del usuario autenticado
 - **Protección**: 🔒 `verifyToken`
+- **Validaciones**: 
+  - Valida que el ID de notificación sea válido
+  - Verifica que la notificación exista y pertenezca al usuario autenticado
 - **Respuesta exitosa (200)**:
 ```json
 {
@@ -816,6 +721,7 @@ Puede explorar y probar distintos escenarios para los endpoints directamente des
   "message": "Notificación eliminada exitosamente"
 }
 ```
+- **Nota**: El `user_id` se extrae automáticamente del token JWT
 
 ---
 

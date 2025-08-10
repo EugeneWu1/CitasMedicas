@@ -1,6 +1,15 @@
 import {Router} from 'express'
 import{ isAdmin } from '../middlewares/isAdmin.js'
 import {verifyToken} from '../middlewares/isAuth.js'
+import {
+    getAll,
+    create,
+    remove,
+    getAllScheduled,
+    update,
+} from '../Controllers/citas.controller.js'
+
+const appointmentRouter = Router()
 
 /**
  * @swagger
@@ -8,24 +17,13 @@ import {verifyToken} from '../middlewares/isAuth.js'
  *   name: Citas
  *   description: Endpoints para gestión de citas médicas
  */
-import {
-    getAll,
-    create,
-    remove,
-    getAllScheduled,
-    update,
-    getAllCancelled,
-    getAllCompleted,
-    getAvailableSlots
-} from '../Controllers/citas.controller.js'
-
-const appointmentRouter = Router()
 
 /**
  * @swagger
- * /citas/admin/scheduled:
+ * /api/citas/admin/citas:
  *   get:
- *     summary: Ver todas las citas agendadas (Solo admin)
+ *     summary: Obtener todas las citas (Admin)
+ *     description: Permite a los administradores ver todas las citas del sistema con filtros opcionales por estado
  *     tags: [Citas]
  *     security:
  *       - bearerAuth: []
@@ -34,230 +32,119 @@ const appointmentRouter = Router()
  *         name: page
  *         schema:
  *           type: integer
- *         description: Número de página
- *         example: 1
+ *           minimum: 1
+ *           default: 1
+ *         description: Número de página para paginación
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
- *         description: Cantidad de elementos por página
- *         example: 20
- *     responses:
- *       200:
- *         description: Lista de citas agendadas
- *       401:
- *         description: Token inválido
- *       403:
- *         description: Acceso denegado - Solo administradores
- */
-//Ver todas las citas agendadas por el cliente (admin) - DEBE IR ANTES DE /:id
-appointmentRouter.get('/admin/scheduled', [verifyToken, isAdmin], getAllScheduled)
-
-/**
- * @swagger
- * /citas/admin/cancelled:
- *   get:
- *     summary: Ver todas las citas canceladas (Solo admin)
- *     tags: [Citas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Número de citas por página
  *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: Número de página
- *         example: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: Cantidad de elementos por página
- *         example: 15
- *     responses:
- *       200:
- *         description: Lista de citas canceladas
- *       401:
- *         description: Token inválido
- *       403:
- *         description: Acceso denegado - Solo administradores
- */
-//Obtener todas las citas canceladas (admin) - DEBE IR ANTES DE /:id
-appointmentRouter.get('/admin/cancelled', [verifyToken, isAdmin], getAllCancelled)
-
-/**
- * @swagger
- * /citas/admin/completed:
- *   get:
- *     summary: Ver todas las citas completadas (Solo admin)
- *     tags: [Citas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: Número de página
- *         example: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: Cantidad de elementos por página
- *         example: 25
- *     responses:
- *       200:
- *         description: Lista de citas completadas
- *       401:
- *         description: Token inválido
- *       403:
- *         description: Acceso denegado - Solo administradores
- */
-//Obtener todas las citas completadas (admin) - DEBE IR ANTES DE /:id
-appointmentRouter.get('/admin/completed', [verifyToken, isAdmin], getAllCompleted)
-
-//Obtener horarios disponibles - DEBE IR ANTES DE /:id
-/**
- * @swagger
- * /citas/availableSlots:
- *   get:
- *     summary: Consultar horarios disponibles para un servicio en una fecha
- *     tags: [Citas]
- *     parameters:
- *       - in: query
- *         name: service_id
+ *         name: status
  *         schema:
  *           type: string
- *         required: true
- *         description: ID del servicio
- *       - in: query
- *         name: date
- *         schema:
- *           type: string
- *           format: date
- *         required: true
- *         description: Fecha a consultar (YYYY-MM-DD)
+ *           enum: [scheduled, cancelled, completed]
+ *         description: Filtrar por estado de cita (opcional, si no se proporciona muestra todas)
  *     responses:
  *       200:
- *         description: Horarios disponibles
- */
-appointmentRouter.get('/availableSlots', verifyToken, getAvailableSlots)
-
-/**
- * @swagger
- * /citas/{id}:
- *   get:
- *     summary: Consultar todas las citas de un usuario
- *     tags: [Citas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario
- *         example: "0949fb0f-1b68-4069-ad98-e4a7de6636f9"
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: Número de página
- *         example: 1
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: Cantidad de elementos por página
- *         example: 5
- *     responses:
- *       200:
- *         description: Lista de citas del usuario
- *       401:
- *         description: Token inválido
- *       404:
- *         description: Usuario no encontrado
- *   put:
- *     summary: Actualizar una cita
- *     tags: [Citas]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID de la cita
- *         example: "4060428a-0e2f-4ae3-8de1-e67992d7ac39"
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               user_id:
- *                 type: string
- *                 example: "13891c48-358f-47e0-974c-d79559bf0fd9"
- *               service_id:
- *                 type: string
- *                 example: "db4c169c-31a0-446b-8fc0-3e49732c8a07"
- *               appointment_date:
- *                 type: string
- *                 format: date
- *                 example: "2025-09-16"
- *               start_time:
- *                 type: string
- *                 format: time
- *                 example: "11:00:00"
- *               status:
- *                 type: string
- *                 enum: [scheduled, completed, cancelled]
- *                 example: "completed"
- *               notes:
- *                 type: string
- *                 example: "Cambio de fecha solicitado por el paciente"
- *     responses:
- *       200:
- *         description: Cita actualizada exitosamente
+ *         description: Lista de citas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Appointment'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
  *       400:
  *         description: Error de validación
  *       401:
- *         description: Token inválido
- *       404:
- *         description: Cita no encontrada
- *   delete:
- *     summary: Eliminar una cita
+ *         description: Token no válido
+ *       403:
+ *         description: No tiene permisos de administrador
+ *       500:
+ *         description: Error interno del servidor
+ */
+//Ver todas las citas en general (admin) 
+appointmentRouter.get('/admin/citas', [verifyToken, isAdmin], getAllScheduled)
+
+
+/**
+ * @swagger
+ * /api/citas:
+ *   get:
+ *     summary: Obtener citas del usuario autenticado
+ *     description: Permite a un usuario ver sus propias citas con filtros opcionales por estado
  *     tags: [Citas]
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Número de página para paginación
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Número de citas por página
+ *       - in: query
+ *         name: status
  *         schema:
  *           type: string
- *         description: ID de la cita
- *         example: "1765488c-950a-4aa8-9af9-619651177459"
+ *           enum: [scheduled, cancelled, completed]
+ *         description: Filtrar por estado de cita (opcional, si no se proporciona muestra todas)
  *     responses:
  *       200:
- *         description: Cita eliminada exitosamente
+ *         description: Lista de citas del usuario obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Appointment'
+ *                 pagination:
+ *                   $ref: '#/components/schemas/Pagination'
+ *       400:
+ *         description: Error de validación
  *       401:
- *         description: Token inválido
+ *         description: Token no válido
  *       404:
- *         description: Cita no encontrada
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error interno del servidor
  */
-//Consultar todas las citas del cliente
-appointmentRouter.get('/:id',verifyToken, getAll)
+//Consultar todas las citas del cliente autenticado
+appointmentRouter.get('/', verifyToken, getAll)
 
 /**
  * @swagger
- * /citas:
+ * /api/citas:
  *   post:
  *     summary: Crear una nueva cita
+ *     description: Permite a un usuario autenticado crear una nueva cita. El user_id se extrae automáticamente del token JWT.
  *     tags: [Citas]
  *     security:
  *       - bearerAuth: []
@@ -268,35 +155,34 @@ appointmentRouter.get('/:id',verifyToken, getAll)
  *           schema:
  *             type: object
  *             required:
- *               - user_id
  *               - service_id
  *               - appointment_date
  *               - start_time
  *             properties:
- *               user_id:
- *                 type: string
- *                 example: "13891c48-358f-47e0-974c-d79559bf0fd9"
  *               service_id:
  *                 type: string
+ *                 format: uuid
+ *                 description: ID del servicio médico
  *                 example: "db4c169c-31a0-446b-8fc0-3e49732c8a07"
  *               appointment_date:
  *                 type: string
  *                 format: date
+ *                 description: Fecha de la cita (YYYY-MM-DD)
  *                 example: "2025-08-15"
  *               start_time:
  *                 type: string
  *                 format: time
+ *                 description: Hora de inicio (HH:MM:SS)
  *                 example: "09:30:00"
  *               end_time:
  *                 type: string
  *                 format: time
- *                 example: "14:30:00"
- *               status:
- *                 type: string
- *                 enum: [scheduled, completed, cancelled]
- *                 example: "scheduled"
+ *                 description: Hora de fin (opcional, se calcula automáticamente)
+ *                 example: "10:00:00"
  *               notes:
  *                 type: string
+ *                 maxLength: 1000
+ *                 description: Notas adicionales (opcional)
  *                 example: "Primera consulta"
  *     responses:
  *       201:
@@ -304,17 +190,81 @@ appointmentRouter.get('/:id',verifyToken, getAll)
  *       400:
  *         description: Error de validación
  *       401:
- *         description: Token inválido
+ *         description: Token no válido
+ *       404:
+ *         description: Usuario o servicio no encontrado
+ *       409:
+ *         description: Conflicto de horario o cita duplicada
+ */
+//Crear una cita
+appointmentRouter.post('/',verifyToken,create)
+
+/**
+ * @swagger
+ * /api/citas/{id}:
+ *   put:
+ *     summary: Actualizar una cita existente
+ *     description: Permite a un usuario actualizar su propia cita. El user_id se verifica automáticamente con el token JWT.
+ *     tags: [Citas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID de la cita a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               service_id:
+ *                 type: string
+ *                 format: uuid
+ *                 description: ID del servicio médico
+ *               appointment_date:
+ *                 type: string
+ *                 format: date
+ *                 description: Fecha de la cita (YYYY-MM-DD)
+ *               start_time:
+ *                 type: string
+ *                 format: time
+ *                 description: Hora de inicio (HH:MM:SS)
+ *               end_time:
+ *                 type: string
+ *                 format: time
+ *                 description: Hora de fin
+ *               status:
+ *                 type: string
+ *                 enum: [scheduled, cancelled, completed]
+ *                 description: Estado de la cita
+ *               notes:
+ *                 type: string
+ *                 maxLength: 1000
+ *                 description: Notas adicionales
+ *     responses:
+ *       200:
+ *         description: Cita actualizada exitosamente
+ *       400:
+ *         description: Error de validación
+ *       401:
+ *         description: Token no válido
+ *       403:
+ *         description: No tiene permisos para modificar esta cita
+ *       404:
+ *         description: Cita no encontrada
  *       409:
  *         description: Conflicto de horario
  */
-//Crear una cita por el cliente 
-appointmentRouter.post('/',verifyToken,create)
-
-//Actualizar cita por el cliente
+//Actualizar cita
 appointmentRouter.put('/:id',verifyToken, update)
 
-//Borrar una cita por el cliente
+//Borrar una cita
 appointmentRouter.delete('/:id',verifyToken, remove)
 
 export default appointmentRouter
