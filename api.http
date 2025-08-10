@@ -302,7 +302,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
   "message": "El sistema estará en mantenimiento el próximo domingo de 2:00 AM a 4:00 AM."
 }
 
-### ⭐ PRUEBA AUTOMÁTICA: Crear una cita (debería generar notificación automática)
+### PRUEBA AUTOMÁTICA: Crear una cita (debería generar notificación automática)
 POST http://localhost:3000/api/citas
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1LTkyYTgtNGI0Yi1hY2E4LTNkYjAxYTA2MDQxYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc1NDc5MTM2NSwiZXhwIjoxNzU0ODM0NTY1fQ.FcrDS9acZYPYwqF_HFIIZaWRF7q8y_QTXU-9XvoA1nM
@@ -315,7 +315,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI1ZDIzZGI1L
   "notes": "Cita de prueba para notificaciones automáticas"
 }
 
-### ⭐ VER NOTIFICACIONES después de crear la cita
+### VER NOTIFICACIONES después de crear la cita
 GET http://localhost:3000/api/notificaciones
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEzODkxYzQ4LTM1OGYtNDdlMC05NzRjLWQ3OTU1OWJmMGZkOSIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3NTQ3MzU5MjMsImV4cCI6MTc1NDc3OTEyM30.owTBkpM1HNLQ83RLF-KgiiO3DrM4X6-ZoGioIgRhs48
 

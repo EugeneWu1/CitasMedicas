@@ -30,8 +30,8 @@ export const getNotifications = async (req, res, next) => {
 
         const notifications = await getUserNotifications(userId, isRead);
 
-        // Verificar si el usuario no tiene citas
-        if (!notifications || notifications.length === 0) {
+        // Verificar si el usuario no tiene notificaciones
+        if (!notifications.data || notifications.data.length === 0) {
             return res.status(204).send();
         }
 

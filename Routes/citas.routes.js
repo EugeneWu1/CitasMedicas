@@ -20,7 +20,7 @@ const appointmentRouter = Router()
 
 /**
  * @swagger
- * /api/citas/admin/citas:
+ * /citas/admin/citas:
  *   get:
  *     summary: Obtener todas las citas (Admin)
  *     description: Permite a los administradores ver todas las citas del sistema con filtros opcionales por estado
@@ -81,7 +81,7 @@ appointmentRouter.get('/admin/citas', [verifyToken, isAdmin], getAllScheduled)
 
 /**
  * @swagger
- * /api/citas:
+ * /citas:
  *   get:
  *     summary: Obtener citas del usuario autenticado
  *     description: Permite a un usuario ver sus propias citas con filtros opcionales por estado
@@ -141,7 +141,7 @@ appointmentRouter.get('/', verifyToken, getAll)
 
 /**
  * @swagger
- * /api/citas:
+ * /citas:
  *   post:
  *     summary: Crear una nueva cita
  *     description: Permite a un usuario autenticado crear una nueva cita. El user_id se extrae automáticamente del token JWT.
@@ -201,7 +201,7 @@ appointmentRouter.post('/',verifyToken,create)
 
 /**
  * @swagger
- * /api/citas/{id}:
+ * /citas/{id}:
  *   put:
  *     summary: Actualizar una cita existente
  *     description: Permite a un usuario actualizar su propia cita. El user_id se verifica automáticamente con el token JWT.
@@ -264,6 +264,38 @@ appointmentRouter.post('/',verifyToken,create)
 //Actualizar cita
 appointmentRouter.put('/:id',verifyToken, update)
 
+/**
+ * @swagger
+ * /citas/{id}:
+ *   delete:
+ *     summary: Eliminar una cita
+ *     description: Permite a un usuario eliminar su propia cita. Se crea automáticamente una notificación de cita cancelada.
+ *     tags: [Citas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID de la cita a eliminar
+ *         example: "74644257-07f9-4e39-bbd5-ffe6322c3f88"
+ *     responses:
+ *       200:
+ *         description: Cita eliminada exitosamente
+ *       400:
+ *         description: Error de validación - ID inválido
+ *       401:
+ *         description: Token no válido o faltante
+ *       403:
+ *         description: No tiene permisos para eliminar esta cita
+ *       404:
+ *         description: Cita no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
 //Borrar una cita
 appointmentRouter.delete('/:id',verifyToken, remove)
 

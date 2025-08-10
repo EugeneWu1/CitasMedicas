@@ -18,7 +18,7 @@ const notificationRouter = Router();
 
 /**
  * @swagger
- * /api/notificaciones:
+ * /notificaciones:
  *   get:
  *     summary: Obtener notificaciones del usuario autenticado
  *     description: Permite a un usuario ver sus propias notificaciones con filtro opcional por estado de lectura
@@ -34,6 +34,8 @@ const notificationRouter = Router();
  *     responses:
  *       200:
  *         description: Notificaciones obtenidas exitosamente
+ *       204:
+ *         description: No hay notificaciones para mostrar
  *       401:
  *         description: Token no válido
  *       404:
@@ -44,7 +46,7 @@ notificationRouter.get('/', verifyToken, getNotifications);
 
 /**
  * @swagger
- * /api/notificaciones:
+ * /notificaciones:
  *   post:
  *     summary: Crear nueva notificación
  *     description: Crear una nueva notificación para el usuario autenticado
@@ -59,14 +61,22 @@ notificationRouter.get('/', verifyToken, getNotifications);
  *             type: object
  *             required:
  *               - message
+ *               - title
  *               - type
  *             properties:
  *               message:
  *                 type: string
+ *                 example: "Su cita ha sido creada exitosamente"
  *                 description: Mensaje de la notificación
+ *               title:
+ *                 type: string
+ *                 example: "Cita Creada"
+ *                 description: Título de la notificación
  *               type:
  *                 type: string
- *                 description: Tipo de notificación
+ *                 example: "cita_creada"
+ *                 enum: [cita_creada, cita_cancelada, recordatorio, sistema]
+ *                 description: Tipo de notificación (cita_creada, cita_cancelada, recordatorio, sistema)
  *     responses:
  *       201:
  *         description: Notificación creada exitosamente
@@ -80,7 +90,7 @@ notificationRouter.post('/', verifyToken, createNewNotification);
 
 /**
  * @swagger
- * /api/notificaciones/{notificationId}/read:
+ * /notificaciones/{notificationId}/read:
  *   put:
  *     summary: Marcar notificación como leída
  *     description: Marca una notificación específica del usuario autenticado como leída
@@ -110,7 +120,7 @@ notificationRouter.put('/:notificationId/read', verifyToken, markNotificationAsR
 
 /**
  * @swagger
- * /api/notificaciones/{notificationId}:
+ * /notificaciones/{notificationId}:
  *   delete:
  *     summary: Eliminar notificación
  *     description: Elimina una notificación específica del usuario autenticado
