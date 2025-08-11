@@ -60,12 +60,6 @@ const appointmentRouter = Router()
  *                 success:
  *                   type: boolean
  *                   example: true
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Appointment'
- *                 pagination:
- *                   $ref: '#/components/schemas/Pagination'
  *       400:
  *         description: Error de validación
  *       401:
