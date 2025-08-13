@@ -142,14 +142,36 @@ CitasMedicas/
 
 4. **Ejecutar la API**
 
-  Para ejecutar la API desde su terminal ejecute:
+  Para ejecutar la API desde su terminal  en modo desarrollo ejecute:
 
   ```bash
   npm run dev
   ```
-  Esto iniciará el servidor en: [http://localhost:3000](http://localhost:3000)
 
-5. **Probar la api desplegada**
+5. **Ejecutar la API**
+
+  Para ejecutar la API desde su terminal  en modo de produccion ejecute:
+
+  ```bash
+  npm run start
+  ```
+  Esto iniciará el servidor en: [http://localhost:3000](http://localhost:3000)
+  
+6. **Valide el esquema de .env.example del proyecto sea el mismo que el del esquema de su archivo .env de producction**
+
+  ```bash
+   DB_HOST=
+   DB_USER=
+   DB_PASSWORD=
+   DB_NAME=
+   DB_PORT=
+   JWT_SECRET=
+   RESEND_API_KEY=
+   PORT=
+   NODE_ENV=development ##para ver stack traces
+  ```
+
+7. **Probar la api desplegada**
    
   Ejecute la api desplegada en render desde: [https://emewesdev-clinic.onrender.com/api/](https://emewesdev-clinic.onrender.com/api/)
 
