@@ -32,6 +32,7 @@ El sistema está diseñado para clínicas que desean digitalizar el proceso de r
 - Node.js
 - Express.js
 - Swagger (Para documentación)
+- MYSQL (Para bases de datos)
 
 ---
 
@@ -170,6 +171,7 @@ CitasMedicas/
    PORT=
    NODE_ENV=development ##para ver stack traces
   ```
+
 7. **Crear las tablas en su cliente local de mysql con el script de creacion contenido en el proyecto**
    
    ```bash
