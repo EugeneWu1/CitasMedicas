@@ -170,8 +170,13 @@ CitasMedicas/
    PORT=
    NODE_ENV=development ##para ver stack traces
   ```
-
-7. **Probar la api desplegada**
+7. **Crear las tablas en su cliente local de mysql con el script de creacion contenido en el proyecto**
+   
+   ```bash
+   script-database.sql
+   ```
+   
+9. **Probar la api desplegada**
    
   Ejecute la api desplegada en render desde: [https://emewesdev-clinic.onrender.com/api/](https://emewesdev-clinic.onrender.com/api/)
 
