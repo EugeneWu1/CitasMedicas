@@ -157,7 +157,7 @@ CitasMedicas/
   ```
   Esto iniciará el servidor en: [http://localhost:3000](http://localhost:3000)
   
-6. **Valide el esquema de .env.example del proyecto sea el mismo que el del esquema de su archivo .env de producction**
+6. **Valide que el esquema del.env.example del proyecto sea el mismo que el del esquema de su archivo .env de producction**
 
   ```bash
    DB_HOST=
